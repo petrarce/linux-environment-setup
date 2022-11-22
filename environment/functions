@@ -1,0 +1,31 @@
+function replace() {
+	set -x
+	echo replace \"$1\" with \"$2\"
+    	sed -ie "s,$1,$2,g" `git grep --name-only  "$1"`
+	set +x
+}
+
+function genFlameGraph() {
+    set -x
+    perfDataFilePath=${1}
+    svgOutput=${2}
+    perfDataFile=`basename ${perfDataFilePath}`
+    tmpFile="/tmp/${perfDataFile}.out.perf-folded"
+    cat ${perfDataFilePath} | c++filt | ~/apps/FlameGraph/stackcollapse-perf.pl > ${tmpFile} && 
+        ~/apps/FlameGraph/flamegraph.pl --width 1900 --minwidth 2 ${tmpFile} > ${svgOutput}
+
+    rm ${tmpFile} || true
+    set +x
+}
+
+function runRemoteScript() {
+    set -x
+    
+    host=${1}
+    pathToScript=${2}
+    shift
+    shift
+    ssh ${host} "sh -s " -- < ${pathToScript} $@
+
+    set +x
+}
