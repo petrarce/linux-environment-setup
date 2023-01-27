@@ -1,3 +1,5 @@
+#=== FUNCTIONS ===
+
 function updateSoftfs() {
     set -x
     host=$1
@@ -7,3 +9,9 @@ function updateSoftfs() {
         ssh ${host} ifus2shell.py -u admin -P update -d localhost /DATA/${imageName}
     set +x
 }
+
+#=== ALIASES ===
+# build local
+alias calvin_bl='calvin -n -p local -T localdev -a none'
+# build local offline (dont refetch repositories)
+alias calvin_blo='calvin_bl -O'
