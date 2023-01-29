@@ -1,34 +1,20 @@
 #!/bin/bash
+# This scripts creates symlincs in ${HOME}
+# to files, that reside in the envirenment/
+# directory. In case if link in ${HOME} already
+# ecists it rewrites the link with force operation
+# otherwice backup of current file is created with 
+# timestamp
 
-set -e
 set -x
 
-TARGET_DIR=${HOME}
-CURRENT_DATE=`date +%Y-%m-%d-%H:%M:%S`
-LOCAL_DIR=`pwd`
-
-if [ -d "${1}" ]; then
-	TARGET_DIR=${1}
-fi
-
-if [ -d ${TARGET_DIR}/environment ]; then
-	mv ${TARGET_DIR}/environment ${TARGET_DIR}/environment.${CURRENT_DATE}.old
-fi
-install -d ${TARGET_DIR}/environment
-install -m 700 ${LOCAL_DIR}/environment/* ${TARGET_DIR}/environment
-
-
-for CONFIG_FILE_PATH in environment/*; do
-
-	CONFIG_FILE=`basename ${CONFIG_FILE_PATH}`
-	pushd ${TARGET_DIR}
-	pwd
-	if [ -f  .${CONFIG_FILE} ]; then
-		mv .${CONFIG_FILE} .${CONFIG_FILE}.${CURRENT_DATE}.old
+DATE=`date +%Y-%m-%d_%H-%M-%S`
+for file in environment/*; do
+	newFile="${HOME}/.`basename ${file}`"
+	test -L ${newFile}
+	if [ "$?" == "1" ]; then
+		cp ${newFile} ${newFile}.${DATE}.bkp
 	fi
-	ln -sf ${TARGET_DIR}/environment/${CONFIG_FILE}  .${CONFIG_FILE}
-	popd
-
+	ln -sf  `pwd`/${file} ${newFile}
 done
-
 set +x
