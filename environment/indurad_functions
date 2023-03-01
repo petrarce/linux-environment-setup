@@ -1,3 +1,4 @@
+#!/bin/bash
 #=== FUNCTIONS ===
 
 function updateSoftfs() {
@@ -12,6 +13,6 @@ function updateSoftfs() {
 
 #=== ALIASES ===
 # build local
-alias calvin_bl='calvin -n -p local -T localdev -a none'
+alias calvin_bl='calvin -n -p local -a none'
 # build local offline (dont refetch repositories)
 alias calvin_blo='calvin_bl -O'

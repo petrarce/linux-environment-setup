@@ -1,3 +1,4 @@
+#!/bin/bash
 function replace() {
 	set -x
 	echo replace \"$1\" with \"$2\"
