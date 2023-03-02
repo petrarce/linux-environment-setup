@@ -2,9 +2,3 @@
 if [ -f ~/.bash_aliases ]; then
 	. ~/.bash_aliases
 fi
-if [ -f ~/.functions ]; then
-#	. ~/.functions
-fi
-if [ -f ~/.indurad_functions ]; then
-#	. ~/.indurad_functions
-fi
