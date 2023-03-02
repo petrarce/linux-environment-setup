@@ -3,8 +3,8 @@ if [ -f ~/.bash_aliases ]; then
 	. ~/.bash_aliases
 fi
 if [ -f ~/.functions ]; then
- 	. ~/.functions
+#	. ~/.functions
 fi
 if [ -f ~/.indurad_functions ]; then
- 	. ~/.indurad_functions
+#	. ~/.indurad_functions
 fi
