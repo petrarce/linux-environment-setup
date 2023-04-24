@@ -1,9 +1,11 @@
-export PATH="${HOME}/apps/sublime_text_3/"\
+export PATH=":${HOME}/apps/sublime_text_3/"\
 ":${HOME}/apps/renderdoc_1.10/bin/"\
 ":${HOME}/apps/ParaView-5.8.1-MPI-Linux-Python2.7-64bit/bin/"\
 ":${HOME}/localstorage/software/Qt/Tools/QtCreator/bin"\
 ":${HOME}/apps/bin"\
+":${HOME}/apps/Typora-linux-x64"\
 ":${PATH}";
+export HISTTIMEFORMAT="%F %T "
 
 alias sublime=sublime_text
 alias renderdoc=qrenderdoc
