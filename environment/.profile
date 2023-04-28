@@ -10,7 +10,10 @@
 #umask 022
 
 # Setup all function/aliases/pathes
-. ~/.setup_environment
+
+if [ -f  "${HOME}/.setup_environment" ] 
+	. "${HOME}/.setup_environment"
+fi
 
 # if running bash
 if [ -n "$BASH_VERSION" ]; then
@@ -25,4 +28,4 @@ if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
 
-setxkbmap -option grp:win_space_toggle us,de,ru
+setxkbmap -option grp:alt_shift_toggle -layout us,de,ru
