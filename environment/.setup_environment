@@ -2,3 +2,8 @@
 if [ -f ~/.bash_aliases ]; then
 	. ~/.bash_aliases
 fi
+
+#!/bin/bash
+if [ -f ~/.bash_aliases_custom ]; then
+	. ~/.bash_aliases_custom
+fi
