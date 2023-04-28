@@ -11,7 +11,7 @@
 
 # Setup all function/aliases/pathes
 
-if [ -f  "${HOME}/.setup_environment" ] 
+if [ -f  "${HOME}/.setup_environment" ]; then 
 	. "${HOME}/.setup_environment"
 fi
 
