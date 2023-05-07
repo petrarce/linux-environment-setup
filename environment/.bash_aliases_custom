@@ -6,6 +6,7 @@ export PATH=":${HOME}/apps/sublime_text_3/"\
 ":${HOME}/apps/Typora-linux-x64"\
 ":${PATH}";
 export HISTTIMEFORMAT="%F %T "
+export GCM_CREDENTIAL_STORE="secretservice"
 
 alias sublime=sublime_text
 alias renderdoc=qrenderdoc
