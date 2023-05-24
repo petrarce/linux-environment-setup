@@ -17,3 +17,4 @@ alias blender_3.0.1=/home/ifolbort/localstorage/apps/blender-3.0.1-linux-x64/ble
 alias blender_2.79b=/home/ifolbort/localstorage/apps/blender-2.79b-linux-glibc219-x86_64/blender
 alias blender_2.82=/home/ifolbort/localstorage/apps/blender-2.82-linux64/blender
 alias remarkable=/home/ifolbort/localstorage/apps/remarkable/run.sh
+alias ns=notify-send
