@@ -2,7 +2,7 @@
 
 declare -a TOOLS_FROM_REPOSITORIES=(
 	git 
-	sublime-text 
+	# sublime-text 
 	tmux
 	tree
 	libnotify-bin
