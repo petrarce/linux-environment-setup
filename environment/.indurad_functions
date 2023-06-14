@@ -18,3 +18,4 @@ alias calvin-bl='calvin -n -p local -a none'
 alias calvin-blo='calvin-bl -O'
 #
 alias calvin-bl-RelWithDebInfo='calvin-bl --cmake-build-type RelWithDebInfo -D'
+alias calvin-bl-localdev-DCC='calvin-bl-RelWithDebInfo -T localdev -m=-j64'
