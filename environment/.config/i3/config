@@ -177,7 +177,9 @@ bar {
 #make screenshot
 bindsym $mod+Shift+s exec "gnome-screenshot -i"
 # lock i3 (locks current user)
-bindsym $mod+Shift+p exec "i3lock"
-#move workspace between displays 
+bindsym $mod+Shift+p exec "i3lock -i ${HOME}/.config/BackgroundImage.png --tiling"
+# move workspace between displays
 bindsym $mod+Shift+m move workspace to output left
+
+exec --no-startup-id feh --bg-fill "${HOME}/.config/BackgroundImage.png"
 

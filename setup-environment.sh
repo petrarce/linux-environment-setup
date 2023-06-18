@@ -22,8 +22,19 @@ function updateFile() {
 	ln -sf "${source}" "${destination}"
 }
 
-VAR_ARGS=$(getopt -o o:n -l output-dir:no-backup -- "$@")
-echo "${VAR_ARGS}"
+function print_usage() {
+  echo " -o, --output-dir    -    target directory wgere symlinks should be created"
+  echo " -n, --no-backup     -    do not create the backup of previous version of the file, whic is going to be substituted"
+  echo " -h, --help          -    print this message"
+
+}
+
+
+VAR_ARGS=$(getopt -o o:nh -l output-dir:no-backup,help -- "$@")
+if [ "$?" != "0" ]; then
+  print_usage
+  exit 1
+fi
 eval set -- "${VAR_ARGS}"
 
 OUTPUT_DIR=$(realpath "${HOME}")
@@ -32,6 +43,7 @@ while true; do
 	case "$1" in
 		-o | --output-dir) OUTPUT_DIR=$(realpath "$2"); shift 2;;
 		-n | --no-baskup) NO_BACKUP="0"; shift 1;;
+    -h | --help) print_usage; exit 1;;
 		*) break;;
 	esac
 done
