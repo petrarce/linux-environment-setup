@@ -30,3 +30,35 @@ function runRemoteScript() {
 
     set +x
 }
+
+function runVlcMp4HttpStream(){
+
+
+	getopt -o p:s: -l -port:-src -- "$@"
+	if [ "$?" !== "0" ]; then
+		return 1
+	fi 
+
+	local ARGS="$(getopt -o p:s:v -l -port:-src: -- "$@")"
+	eval set -- "${ARGS}"
+
+	local httpPort=80
+	local srcVideo=""
+	local verbose=""
+	while true; do
+		case "${1}" in
+			-s|-src) srcVideo="${2}"; shift 2;;
+			-p|-port) httpPort="${2}"; shift 2;;
+			-v) verbose="-vvv"; shift;;
+			--) shift; break;;
+			*) echo "Unexpected option $1"; return 1;;
+		esac
+	done
+
+	cvlc ${verbose} \
+		--sout '#transcode{vcodec=h264}:std{access=http{mime=video/mp4},mux=ts,dst=:'"${httpPort}"'}' \
+		--loop \
+		--sout-keep \
+		"$(realpath "${srcVideo}")"
+
+}
