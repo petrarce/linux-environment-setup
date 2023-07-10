@@ -13,9 +13,12 @@ function updateSoftfs() {
 
 #=== ALIASES ===
 # build local
-alias calvin-bl='calvin -n -p local -a none'
+alias calvin-b='calvin -Q -n -D'
+alias calvin-bl='calvin-b -p local -a none'
 # build local offline (dont refetch repositories)
 alias calvin-blo='calvin-bl -O'
 #
-alias calvin-bl-RelWithDebInfo='calvin-bl --cmake-build-type RelWithDebInfo -D'
+alias calvin-bl-RelWithDebInfo='calvin-bl --cmake-build-type RelWithDebInfo'
+alias calvin-b-RelWithDebInfo='calvin-b --cmake-build-type RelWithDebInfo'
+
 alias calvin-bl-localdev-DCC='calvin-bl-RelWithDebInfo -T localdev -m=-j64'

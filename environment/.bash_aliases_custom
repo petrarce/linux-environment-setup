@@ -5,8 +5,16 @@ export PATH=":${HOME}/apps/sublime_text_3/"\
 ":${HOME}/apps/bin"\
 ":${HOME}/apps/Typora-linux-x64"\
 ":${PATH}";
+
+# add timestamps to history
 export HISTTIMEFORMAT="%F %T "
+# ???
 export GCM_CREDENTIAL_STORE="secretservice"
+
+# the sudo alias is required to run other aliases under sudo
+# the space in the alias definition is required since it will
+# make bash to continue alias expantion for further tokens after sudo
+alias sudo='sudo '
 
 alias sublime=sublime_text
 alias renderdoc=qrenderdoc
@@ -18,3 +26,7 @@ alias blender_2.79b=/home/ifolbort/localstorage/apps/blender-2.79b-linux-glibc21
 alias blender_2.82=/home/ifolbort/localstorage/apps/blender-2.82-linux64/blender
 alias remarkable=/home/ifolbort/localstorage/apps/remarkable/run.sh
 alias ns=notify-send
+
+# wp3 tooling aliases 
+alias mw1='vpn-messwand -h messwand-e4-1'
+alias mw2='vpn-messwand -h messwand-e4-2'
