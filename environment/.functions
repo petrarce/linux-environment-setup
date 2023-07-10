@@ -62,3 +62,7 @@ function runVlcMp4HttpStream(){
 		"$(realpath "${srcVideo}")"
 
 }
+
+hg() {
+    history | grep "$1"
+}
