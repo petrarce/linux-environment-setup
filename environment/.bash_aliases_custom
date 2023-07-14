@@ -26,6 +26,8 @@ alias blender_2.79b=/home/ifolbort/localstorage/apps/blender-2.79b-linux-glibc21
 alias blender_2.82=/home/ifolbort/localstorage/apps/blender-2.82-linux64/blender
 alias remarkable=/home/ifolbort/localstorage/apps/remarkable/run.sh
 alias ns=notify-send
+alias cmake-ninja='cmake -GNinja'
+alias cmake-RelWithDebInfo='cmake-ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo'
 
 # wp3 tooling aliases 
 alias mw1='vpn-messwand -h messwand-e4-1'
