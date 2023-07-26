@@ -175,7 +175,7 @@ bar {
 
 #===CUSTOM BINDINGS===
 #make screenshot
-bindsym $mod+Shift+s exec "gnome-screenshot -i"
+bindsym $mod+Shift+s exec "flameshot launcher"
 # lock i3 (locks current user)
 bindsym $mod+Shift+p exec "i3lock -i ${HOME}/.config/BackgroundImage.png --tiling"
 # move workspace between displays
