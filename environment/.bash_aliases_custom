@@ -28,6 +28,7 @@ alias remarkable=/home/ifolbort/localstorage/apps/remarkable/run.sh
 alias ns=notify-send
 alias cmake-ninja='cmake -GNinja'
 alias cmake-RelWithDebInfo='cmake-ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo'
+alias rsync='rsync --progress'
 
 # wp3 tooling aliases 
 alias mw1='vpn-messwand -h messwand-e4-1'
