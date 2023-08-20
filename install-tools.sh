@@ -35,6 +35,9 @@ declare -a TOOLS_FROM_REPOSITORIES=(
 	# sound
 	pavucontrol-qt
 	software-properties-common
+
+	# 
+	nitrogen
 )
 
 declare -a TOOLS_FROM_SOURCE=(
