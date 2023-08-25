@@ -177,7 +177,7 @@ bar {
 #make screenshot
 bindsym $mod+Shift+s exec "flameshot launcher"
 # lock i3 (locks current user)
-bindsym $mod+Shift+p exec "i3lock -i ${HOME}/.config/BackgroundImage.png --tiling"
+bindsym $mod+Shift+p exec "i3lock-multiscreen -i ${HOME}/.config/BackgroundImage.png"
 # move workspace between displays
 bindsym $mod+Shift+m move workspace to output left
 
