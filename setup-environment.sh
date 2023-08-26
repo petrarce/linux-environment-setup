@@ -19,6 +19,9 @@ function updateFile() {
 		echo "Backed up ${destination} at ${destination}$(date).bkp"
 	fi
 	echo "update  ${destination} with ${source}"
+	if [ ! -d "$(dirname \"${destination}\")" ]; then
+		mkdir -p "$(dirname ${destination})"
+	fi
 	ln -sf "${source}" "${destination}"
 }
 
