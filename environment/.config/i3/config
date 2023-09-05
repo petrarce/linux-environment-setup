@@ -182,4 +182,5 @@ bindsym $mod+Shift+p exec "i3lock-multiscreen -i ${HOME}/.config/BackgroundImage
 bindsym $mod+Shift+m move workspace to output left
 
 exec --no-startup-id feh --bg-fill "${HOME}/.config/BackgroundImage.png"
+exec_always --no-startup-id "setxkbmap -option grp:alt_shift_toggle -layout us,de,ru"
 

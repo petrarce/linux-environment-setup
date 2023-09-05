@@ -15,7 +15,7 @@ function updateFile() {
 	fi 
 
 	if [ -f "${destination}" ] && [ "${NO_BACKUP}" == "1" ]; then
-		cp -L "${destination}" "${destination}$(date).bkp"
+		cp -L "${destination}" "${destination}_$(date +%H-%M-%S_%y-%m-%d).bkp"
 		echo "Backed up ${destination} at ${destination}$(date).bkp"
 	fi
 	echo "update  ${destination} with ${source}"

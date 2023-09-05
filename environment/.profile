@@ -27,5 +27,3 @@ fi
 if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
-
-setxkbmap -option grp:alt_shift_toggle -layout us,de,ru
