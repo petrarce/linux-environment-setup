@@ -1,0 +1,16 @@
+[Unit]
+Description=Service which mounts google drive directory. Requires google-drive-ocamlfuse (see https://github.com/astrada/google-drive-ocamlfuse/wiki/Installation)
+After=network.target
+
+[Service]
+Restart=always
+Type=forking
+#User=ivan
+#Group=ivan
+ExecStartPre=mkdir -p ${HOME}/GoogleDrive
+ExecStart=google-drive-ocamlfuse -verbose ${HOME}/GoogleDrive
+ExecStop=fusermount -u ${HOME}/GoogleDrive
+Nice=5
+
+[Install]
+WantedBy=default.target
