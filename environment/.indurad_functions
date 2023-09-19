@@ -11,14 +11,27 @@ function updateSoftfs() {
     set +x
 }
 
+function wake-on-lan()
+{
+	MAC=${1}
+	HOSTNAME=${2}
+	ssh idesktop11.bvd.indurad.x wakeonlan ${MAC}
+	ssh  -i $(echo rsa-crypt-unlock) root@corona
+}
+
 #=== ALIASES ===
-# build local
+# calvin build aliases
 alias calvin-b='calvin -Q -n -D'
 alias calvin-bl='calvin-b -p local -a none'
-# build local offline (dont refetch repositories)
 alias calvin-blo='calvin-bl -O'
-#
 alias calvin-bl-RelWithDebInfo='calvin-bl --cmake-build-type RelWithDebInfo'
 alias calvin-b-RelWithDebInfo='calvin-b --cmake-build-type RelWithDebInfo'
-
 alias calvin-bl-localdev-DCC='calvin-bl-RelWithDebInfo -T localdev -m=-j64'
+
+#wake on lan aliases
+alias wake-on-lan='wake-on-lan '
+alias wake-on-lan-corona='wake-on-lan corona-mac corona'
+
+# messwand aliases 
+alias mw1='vpn-messwand -h messwand-e4-1 '
+alias mw2='vpn-messwand -h messwand-e4-2 '
