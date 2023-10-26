@@ -22,5 +22,7 @@ alias cmake-RelWithDebInfo='cmake-ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo '
 alias rsync='rsync --progress -rl '
 alias echo='echo '
 alias ssh='ssh '
+alias glog='git log  --decorate --graph --oneline '
+alias ggrep='git grep '
 
 

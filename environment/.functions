@@ -66,3 +66,24 @@ function runVlcMp4HttpStream(){
 hg() {
     history | grep "$1"
 }
+
+setup-toolchain-environment() {
+	local environmentSetupScript=${1}
+	CURRENT_PATH="${PATH}"
+	source ${environmentSetupScript}
+	export PATH="${PATH}:${CURRENT_PATH}"
+}
+
+setup-template() {
+	local targetDirectory="${1}"
+	local templateGithubLink="${2}"
+	mkdir "${targetDirectory}"
+	# wget https://github.com/petrarce/cmake-project-template/archive/refs/heads/master.zip -O "${targetDirectory}/master.zip"
+	wget "${templateGithubLink}" -O "${targetDirectory}/master.zip"
+	unzip -d "${targetDirectory}" "${targetDirectory}/master.zip"
+	rm "${targetDirectory}/master.zip"
+}
+
+setup-cmake-template() {
+	setup-template ${1} https://github.com/petrarce/cmake-project-template/archive/refs/heads/master.zip
+}
