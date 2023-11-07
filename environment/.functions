@@ -67,14 +67,14 @@ hg() {
     history | grep "$1"
 }
 
-setup-toolchain-environment() {
+function setup-toolchain-environment() {
 	local environmentSetupScript=${1}
 	CURRENT_PATH="${PATH}"
 	source ${environmentSetupScript}
 	export PATH="${PATH}:${CURRENT_PATH}"
 }
 
-setup-template() {
+function setup-template() {
 	local targetDirectory="${1}"
 	local templateGithubLink="${2}"
 	mkdir "${targetDirectory}"
@@ -84,6 +84,41 @@ setup-template() {
 	rm "${targetDirectory}/master.zip"
 }
 
-setup-cmake-template() {
+function setup-cmake-template() {
 	setup-template ${1} https://github.com/petrarce/cmake-project-template/archive/refs/heads/master.zip
+}
+
+function perf-flamegraph() {
+	INPUT="$(cat)"
+
+	OUT_FILE_PATH="$(realpath ${1})"
+	OUT_FILE_NAME="$(basename ${OUT_FILE_PATH})"
+	OUT_FILE_DIR="$(dirname ${OUT_FILE_PATH})"
+
+	echo "${INPUT}" | stackcollapse-perf.pl > "/tmp/${OUT_FILE_NAME}.perf-folded"
+	flamegraph.pl --width 1900 --minwidth 2 "/tmp/${OUT_FILE_NAME}.perf-folded" > "${OUT_FILE_PATH}"
+	rm "/tmp/${OUT_FILE_NAME}.perf-folded"
+
+}
+
+function perf-flamegraph-from-script-file() {
+	PERF_FILE_PATH="$(realpath ${1})"
+	PERF_FILE_NAME="$(basename ${PERF_FILE_PATH})"
+	PERF_FILE_DIR="$(dirname ${PERF_FILE_PATH})"
+
+	cat ${PERF_FILE_PATH} | perf-flamegraph "${PERF_FILE_DIR}/${PERF_FILE_NAME}.svg"
+
+}
+
+
+function perf-script() {
+	local FILE_PATH="${1}"
+	local OUT_FILE="${2}"
+	local LOCAL_PERF_DATA="${PWD}/perf.data"
+	if [ -f "${LOCAL_PERF_DATA}" ]; then
+		echo-err "$0 failed: ${LOCAL_PERF_DATA} already exists"
+	fi
+	ln -s "${FILE_PATH}" "${PWD}/perf.data"
+	perf script | c++filt
+	rm perf.data
 }

@@ -22,11 +22,20 @@ function wake-on-lan()
 #=== ALIASES ===
 # calvin build aliases
 alias calvin-b='calvin -Q -n -D'
+alias calvin-b-RelWithDebInfo='calvin-b --cmake-build-type RelWithDebInfo'
+alias calvin-b-Profiling='calvin-b --cmake-build-type Profiling'
+alias calvin-b-Release='calvin-b --cmake-build-type Release'
 alias calvin-bl='calvin-b -p local -a none'
 alias calvin-blo='calvin-bl -O'
 alias calvin-bl-RelWithDebInfo='calvin-bl --cmake-build-type RelWithDebInfo'
-alias calvin-b-RelWithDebInfo='calvin-b --cmake-build-type RelWithDebInfo'
-alias calvin-bl-localdev-DCC='calvin-bl-RelWithDebInfo -T localdev -m=-j64'
+alias calvin-bl-Profiling='calvin-bl --cmake-build-type Profiling'
+alias calvin-bl-Release='calvin-bl --cmake-build-type Release'
+alias calvin-bl-RelWithDebInfo-localdev='calvin-bl-RelWithDebInfo -T localdev'
+alias calvin-bl-Profiling-localdev='calvin-bl-Profiling -T localdev'
+alias calvin-bl-Release-localdev='calvin-bl-Release -T localdev'
+
+#ifus2shell scripts
+alias ifus2shell-update='ifus2shell -P update -u admin -r'
 
 #wake on lan aliases
 alias wake-on-lan='wake-on-lan '
