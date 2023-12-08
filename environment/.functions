@@ -113,7 +113,6 @@ function perf-flamegraph-from-script-file() {
 
 function perf-script() {
 	local FILE_PATH="${1}"
-	local OUT_FILE="${2}"
 	local LOCAL_PERF_DATA="${PWD}/perf.data"
 	if [ -f "${LOCAL_PERF_DATA}" ]; then
 		echo-err "$0 failed: ${LOCAL_PERF_DATA} already exists"
@@ -121,4 +120,21 @@ function perf-script() {
 	ln -s "${FILE_PATH}" "${PWD}/perf.data"
 	perf script | c++filt
 	rm perf.data
+}
+
+function perf-to-svg {
+
+	if [ "${1}" == "--help" ]; then
+		echo  "usage: perf-to-svg <text-name> <PID>"
+		return;
+	fi
+	local TEST_NAME="${1}"
+	local PROCES_PID="${2}"
+	if [ -z "${TEST_NAME}" ] || [ -z "${PROCES_PID}" ]; then
+		return;
+	fi 
+
+	perf-record-dwarf -p "${PROCES_PID}" -o "${TEST_NAME}".perf -- sleep 30
+	perf-script "${TEST_NAME}".perf | perf-flamegraph "${TEST_NAME}".svg
+	ns "FINISH perf-to-svg ${TEST_NAME}"
 }
