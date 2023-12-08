@@ -28,7 +28,12 @@ alias ssh='ssh '
 alias glog='git log  --decorate --graph --oneline '
 alias ggrep='git grep '
 
-alias perf-record='perf record -F 10000 -g --call-graph fp '
+alias perf-record='perf record --debuginfod="https://debuginfod.debian.net" -F 10000 -g '
+# More efficient then dwarf, but may generate bogus graphs on optimized gcc stacktraces
+alias perf-record-fp='perf-record --call-graph dwarf '
+# Use if perf-record-fp  fails to generate sensible graphs
+alias perf-record-dwarf='perf-record --call-graph dwarf '
+
 alias nvidia-no-offload='__NV_PRIME_RENDER_OFFLOAD=0 __GLX_VENDOR_LIBRARY_NAME=nvidia '
 alias nvidia-offload='__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia '
 alias app-name-from-pid='ps -o comm= -p '
