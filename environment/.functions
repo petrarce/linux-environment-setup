@@ -138,3 +138,38 @@ function perf-to-svg {
 	perf-script "${TEST_NAME}".perf | perf-flamegraph "${TEST_NAME}".svg
 	ns "FINISH perf-to-svg ${TEST_NAME}"
 }
+
+print_progress() {
+	local progress="$1"
+	local msg="${2}"
+	local bar_length=20
+	local fill_length=$((progress * bar_length / 100))
+	local empty_length=$((bar_length - fill_length))
+
+	 printf "\r[%-*s%*s] %d:$msg%%" "$fill_length" "" "$empty_length" "" "$progress"
+}
+function git-merge-for-commit(){
+	TARGET_COMMIT="${1}";
+	HEAD_COMMIT="${2}";
+	
+	local merge_commit_str=$(git log "${TARGET_COMMIT}"^.."${HEAD_COMMIT}" --merges --format="%H" | tac);
+	local merge_commits;
+	IFS=$'\n' read -r -d '' -a merge_commits <<< "${merge_commit_str}";
+	local num_commits="${#merge_commits[@]}";
+
+	echo "num_commits=${num_commits}";
+
+	for((i = 0; i < num_commits; i++)); do
+
+		local prgs=$((${i} * 100 / ${num_commits}));
+		print_progress "${prgs}";
+		
+		local merge_commit="${merge_commits[i]}"
+		local target_commit_str_grep="$(git log --format="%H" ${merge_commit}^..${merge_commit} | grep "${TARGET_COMMIT}")";
+		if [ -n "${target_commit_str_grep}" ]; then 
+			echo "${TARGET_COMMIT} came from $(git show --no-patch ${merge_commit})"; 
+			return;
+		fi;
+	done
+	echo "No merge commit found for the target commit: ${TARGET_COMMIT} starting from ${HEAD_COMMIT}"
+}
