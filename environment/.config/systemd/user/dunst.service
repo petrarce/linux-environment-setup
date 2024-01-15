@@ -1,0 +1,9 @@
+[Unit]
+Description=Dunst - A lightweight notification daemon for X11
+
+[Service]
+ExecStart=/usr/bin/dunst
+Restart=always
+
+[Install]
+WantedBy=default.target
