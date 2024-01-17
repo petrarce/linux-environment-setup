@@ -3,6 +3,8 @@ export PATH=":${HOME}/apps/sublime_text_3/"\
 ":${HOME}/apps/bin"\
 ":${HOME}/apps/Typora-linux-x64"\
 ":${PATH}";
+export PYTHONPATH="${HOME}/apps/python-tools"\
+":${PYTHONPATH}";
 
 # add timestamps to history
 export HISTTIMEFORMAT="%F %T "
