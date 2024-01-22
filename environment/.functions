@@ -88,26 +88,17 @@ function setup-cmake-template() {
 	setup-template ${1} https://github.com/petrarce/cmake-project-template/archive/refs/heads/master.zip
 }
 
-function perf-flamegraph() {
-	INPUT="$(cat)"
-
-	OUT_FILE_PATH="$(realpath ${1})"
-	OUT_FILE_NAME="$(basename ${OUT_FILE_PATH})"
-	OUT_FILE_DIR="$(dirname ${OUT_FILE_PATH})"
-
-	echo "${INPUT}" | stackcollapse-perf.pl > "/tmp/${OUT_FILE_NAME}.perf-folded"
-	flamegraph.pl --width 1900 --minwidth 2 "/tmp/${OUT_FILE_NAME}.perf-folded" > "${OUT_FILE_PATH}"
-	rm "/tmp/${OUT_FILE_NAME}.perf-folded"
-
-}
-
 function perf-flamegraph-from-script-file() {
-	PERF_FILE_PATH="$(realpath ${1})"
-	PERF_FILE_NAME="$(basename ${PERF_FILE_PATH})"
-	PERF_FILE_DIR="$(dirname ${PERF_FILE_PATH})"
+	PERF_SCRIPT_FILE_PATH="$(realpath ${1})"
+	PERF_SCRIPT_FILE_NAME="$(basename ${PERF_FILE_PATH})"
+	PERF_SCRIPT_FILE_DIR="$(dirname ${PERF_FILE_PATH})"
 
-	cat ${PERF_FILE_PATH} | perf-flamegraph "${PERF_FILE_DIR}/${PERF_FILE_NAME}.svg"
+	OUT_FILE_PATH="$(realpath ${2})"
+	OUT_FILE_NAME="$(basename ${OUT_FILE_PATH})"
 
+	#cat ${PERF_FILE_PATH} | perf-flamegraph "${PERF_FILE_DIR}/${PERF_FILE_NAME}.svg"
+	stackcollapse-perf.pl "${PERF_SCRIPT_FILE_PATH}" > "/tmp/${OUT_FILE_NAME}.perf-folded";
+	flamegraph.pl --width 1900 --minwidth 2 "/tmp/${OUT_FILE_NAME}.perf-folded" > "${OUT_FILE_PATH}"
 }
 
 
@@ -123,7 +114,6 @@ function perf-script() {
 }
 
 function perf-to-svg {
-
 	if [ "${1}" == "--help" ]; then
 		echo  "usage: perf-to-svg <text-name> <PID>"
 		return;
@@ -135,7 +125,8 @@ function perf-to-svg {
 	fi 
 
 	perf-record-dwarf -p "${PROCES_PID}" -o "${TEST_NAME}".perf -- sleep 30
-	perf-script "${TEST_NAME}".perf | perf-flamegraph "${TEST_NAME}".svg
+	perf-script "${TEST_NAME}.perf" > "${TEST_NAME}.script";
+	perf-flamegraph-from-script-file "${TEST_NAME}.script" "${TEST_NAME}.svg"
 	ns "FINISH perf-to-svg ${TEST_NAME}"
 }
 
