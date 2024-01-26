@@ -164,3 +164,21 @@ function git-merge-for-commit(){
 	done
 	echo "No merge commit found for the target commit: ${TARGET_COMMIT} starting from ${HEAD_COMMIT}"
 }
+
+function android-logcat-app() {
+
+	local package_name="${1}"
+
+	adb logcat --pid=$(adb shell pidof -s "${package_name}")
+}
+
+function android-app-admin-signature-checksum() {
+	local path_to_app="${1}"
+
+	keytool  -printcert -jarfile "$(realpath "${path_to_app}")" \
+		| grep -Po "(?<=SHA256:) .*" \
+		| xxd -r -p \
+		| openssl base64 \
+		| tr -d '=' \
+		| tr -- '+/=' '-_'
+}

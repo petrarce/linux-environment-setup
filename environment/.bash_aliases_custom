@@ -42,3 +42,7 @@ alias nvidia-offload='__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvid
 alias app-name-from-pid='ps -o comm= -p '
 alias echo-err='echo [ERROR] '
 
+# android aliases
+alias android-admin-set='adb shell dpm set-device-owner '
+alias android-admin-unset='adb shell dpm remove-active-admin '
+
