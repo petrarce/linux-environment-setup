@@ -130,3 +130,6 @@ if [ -f ~/.indurad_functions ]; then
 fi
 
 #iRPU:UmFkYXI0TSFuIW5nCg==
+
+# Disable beeper for tab completion in the terminal
+bind 'set bell-style none'
