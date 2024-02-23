@@ -1,8 +1,8 @@
-export PATH=":${HOME}/apps/sublime_text_3/"\
+export PATH=""\
 ":${HOME}/localstorage/software/Qt/Tools/QtCreator/bin"\
 ":${HOME}/apps/bin"\
-":${HOME}/apps/Typora-linux-x64"\
 ":${PATH}";
+
 export PYTHONPATH="${HOME}/apps/python-tools"\
 ":${PYTHONPATH}";
 
