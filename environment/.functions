@@ -90,8 +90,6 @@ function setup-cmake-template() {
 
 function perf-flamegraph-from-script-file() {
 	PERF_SCRIPT_FILE_PATH="$(realpath ${1})"
-	PERF_SCRIPT_FILE_NAME="$(basename ${PERF_FILE_PATH})"
-	PERF_SCRIPT_FILE_DIR="$(dirname ${PERF_FILE_PATH})"
 
 	OUT_FILE_PATH="$(realpath ${2})"
 	OUT_FILE_NAME="$(basename ${OUT_FILE_PATH})"
