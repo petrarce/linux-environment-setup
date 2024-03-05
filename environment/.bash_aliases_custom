@@ -21,7 +21,6 @@ export INDURAD_PRECOMMIT_AUTO_FIX=1
 # make bash to continue alias expantion for further tokens after sudo
 alias sudo='sudo '
 
-alias sublime='sublime_text '
 alias ns='notify-send '
 alias cmake-ninja='cmake -GNinja '
 alias cmake-RelWithDebInfo='cmake-ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo '
@@ -45,4 +44,8 @@ alias echo-err='echo [ERROR] '
 # android aliases
 alias android-admin-set='adb shell dpm set-device-owner '
 alias android-admin-unset='adb shell dpm remove-active-admin '
+
+# run LLM client/server
+alias koboldcpp-cpu='koboldcpp --launch --skiplauncher --contextsize 16384 --threads 8 '
+alias koboldcpp-gpunvidia='koboldcpp-cpu --gpulayers 5 --usecublas'
 
