@@ -180,3 +180,20 @@ function android-app-admin-signature-checksum() {
 		| tr -d '=' \
 		| tr -- '+/=' '-_'
 }
+
+function ln-apps() {
+	local APP_PATH="$(realpath "$1")"
+	local APP_ALIAS="$2"
+	if [ ! -f "${APP_PATH}" ]; then
+		echo-err "No file to link to executable: ${APP_PATH}" 
+		return;
+	fi
+
+	if [ -z "$2" ]; then
+		APP_ALIAS="$(basename "${APP_PATH}")"  
+	fi
+	
+	echo "${APP_PATH}, ${APP_ALIAS}"
+	ln -s "${APP_PATH}" "${HOME}/apps/bin/${APP_ALIAS}"
+
+}
