@@ -113,16 +113,20 @@ function perf-script() {
 
 function perf-to-svg {
 	if [ "${1}" == "--help" ]; then
-		echo  "usage: perf-to-svg <text-name> <PID>"
+		echo  "usage: perf-to-svg <text-name> <PID> [<SecondsToProfile=30>]"
 		return;
 	fi
 	local TEST_NAME="${1}"
 	local PROCES_PID="${2}"
 	if [ -z "${TEST_NAME}" ] || [ -z "${PROCES_PID}" ]; then
 		return;
+	fi
+	local secToProfile="${3}"
+	if [ -z "${secToProfile}" ]; then
+		secToProfile=30
 	fi 
 
-	perf-record-dwarf -p "${PROCES_PID}" -o "${TEST_NAME}".perf -- sleep 30
+	perf-record-dwarf -p "${PROCES_PID}" -o "${TEST_NAME}".perf -- sleep ${secToProfile}
 	perf-script "${TEST_NAME}.perf" > "${TEST_NAME}.script";
 	perf-flamegraph-from-script-file "${TEST_NAME}.script" "${TEST_NAME}.svg"
 	ns "FINISH perf-to-svg ${TEST_NAME}"
@@ -231,4 +235,9 @@ function git-replace-files() {
 		git add ${file} ${newFile}
 	done
 	set +x
+}
+
+function conjugate() {
+
+	firefox "https://conjugator.reverso.net/conjugation-english-verb-${1}.html"
 }
