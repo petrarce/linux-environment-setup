@@ -48,3 +48,6 @@ alias wake-on-lan-corona='wake-on-lan corona-mac corona'
 # messwand aliases 
 alias mw1='vpn-messwand -h messwand-e4-1 '
 alias mw2='vpn-messwand -h messwand-e4-2 '
+
+# git aliases
+alias git-remote-add-monolith-mainline='git remote add mainline git@git.indurad.x:master/monolith.git'

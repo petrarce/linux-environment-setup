@@ -48,4 +48,3 @@ alias android-admin-unset='adb shell dpm remove-active-admin '
 # run LLM client/server
 alias koboldcpp-cpu='koboldcpp --skiplauncher --contextsize 16384 --threads 8 '
 alias koboldcpp-gpunvidia='koboldcpp-cpu --gpulayers 5 --usecublas'
-
