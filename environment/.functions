@@ -111,7 +111,32 @@ function perf-script() {
 	rm perf.data
 }
 
+function perf-record-script() {
+
+	local PID="${1}"
+	local TEST_NAME="${2}"
+	local PERF_RECORD_TYPE="${3}"
+	local RECORD_TIME_SEC="${4}"
+
+	local TEST_PERF_FILE="${TEST_NAME}.perf"
+	local TEST_SCRIPT_FILE="${TEST_NAME}.script"
+
+	if [ -z "${PERF_RECORD_TYPE}" ]; then
+		PERF_RECORD_TYPE="30"
+	fi
+
+	if [ "${PERF_RECORD_TYPE}"=="dwarf" ]; then
+		perf-record-dwarf -p "${PID}" -o "${TEST_PERF_FILE}" -- sleep "${RECORD_TIME_SEC}"
+	else
+		perf-record-fp -p "${PID}" -o "${TEST_PERF_FILE}" -- sleep "${RECORD_TIME_SEC}"
+	fi
+
+	perf-script "${TEST_PERF_FILE}" > "${TEST_SCRIPT_FILE}"
+
+}
+
 function perf-to-svg {
+	set -x
 	if [ "${1}" == "--help" ]; then
 		echo  "usage: perf-to-svg <text-name> <PID> [<SecondsToProfile=30>]"
 		return;
@@ -126,10 +151,10 @@ function perf-to-svg {
 		secToProfile=30
 	fi 
 
-	perf-record-dwarf -p "${PROCES_PID}" -o "${TEST_NAME}".perf -- sleep ${secToProfile}
-	perf-script "${TEST_NAME}.perf" > "${TEST_NAME}.script";
+	perf-record-script "${PROCES_PID}" "${TEST_NAME}" dwarf "${secToProfile}"
 	perf-flamegraph-from-script-file "${TEST_NAME}.script" "${TEST_NAME}.svg"
 	ns "FINISH perf-to-svg ${TEST_NAME}"
+	set +x
 }
 
 print_progress() {
