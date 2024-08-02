@@ -112,7 +112,7 @@ function perf-script() {
 }
 
 function perf-record-script() {
-
+	set -x
 	local PID="${1}"
 	local TEST_NAME="${2}"
 	local PERF_RECORD_TYPE="${3}"
@@ -125,14 +125,14 @@ function perf-record-script() {
 		PERF_RECORD_TYPE="30"
 	fi
 
-	if [ "${PERF_RECORD_TYPE}"=="dwarf" ]; then
+	if [ "${PERF_RECORD_TYPE}" == "dwarf" ]; then
 		perf-record-dwarf -p "${PID}" -o "${TEST_PERF_FILE}" -- sleep "${RECORD_TIME_SEC}"
 	else
 		perf-record-fp -p "${PID}" -o "${TEST_PERF_FILE}" -- sleep "${RECORD_TIME_SEC}"
 	fi
 
 	perf-script "${TEST_PERF_FILE}" > "${TEST_SCRIPT_FILE}"
-
+	set +x
 }
 
 function perf-to-svg {
