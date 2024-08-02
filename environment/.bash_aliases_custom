@@ -38,7 +38,7 @@ alias git-setup-local-default-author-email='git config --local author.email petr
 alias git-setup-local-default='git-setup-local-default-author-name && git-setup-local-default-author-email'
 
 
-alias perf-record='perf record --debuginfod="https://debuginfod.debian.net" -g '
+alias perf-record='perf record -g '
 # More efficient then dwarf, but may generate bogus graphs on optimized gcc stacktraces
 alias perf-record-fp='perf-record  -F 10000 --call-graph fp '
 # Use if perf-record-fp  fails to generate sensible graphs
