@@ -36,7 +36,8 @@ alias ggrep='git grep '
 alias git-setup-local-default-author-name='git config --local author.name petrarce '
 alias git-setup-local-default-author-email='git config --local author.email petrarce@gmail.com '
 alias git-setup-local-default='git-setup-local-default-author-name && git-setup-local-default-author-email'
-
+alias xz='xz --verbose'
+alias unxz='unxz --verbose'
 
 alias perf-record='perf record -g '
 # More efficient then dwarf, but may generate bogus graphs on optimized gcc stacktraces
