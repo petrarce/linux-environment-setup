@@ -9,7 +9,7 @@ Type=forking
 #Group=ivan
 ExecStartPre=mkdir -p ${HOME}/GoogleDrive
 ExecStart=google-drive-ocamlfuse -verbose ${HOME}/GoogleDrive
-ExecStop=fusermount -u ${HOME}/GoogleDrive
+ExecStop=fusermount -u -z ${HOME}/GoogleDrive
 Nice=5
 
 [Install]

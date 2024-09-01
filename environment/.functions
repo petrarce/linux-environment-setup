@@ -1,11 +1,4 @@
 #!/bin/bash
-function git-replace() {
-	set -x
-	echo replace \"$1\" with \"$2\"
-    	sed -E "s,$1,$2,g" -i `git grep --name-only  "$1"`
-	set +x
-}
-
 function runRemoteScript() {
     set -x
     
@@ -234,19 +227,6 @@ function git-merges-for-file()
 	for i in $(git log "${SOURCE_TARGET}" --format=format:"%h" -- "${FILE}"); do 
 		git-merge-for-commit $i "${DEST_TARGET}"; 
 	done
-}
-
-function git-replace-files() {
-	set -x
-	local from="${1}"
-	local to="${2}"
-
-	for file in $(git ls-files "*${1}[^/]*"); do
-		local newFile="$(dirname ${file})/$(basename ${file} | sed "s,${from},${to},g")"
-		mv "${file}" "${newFile}"
-		git add ${file} ${newFile}
-	done
-	set +x
 }
 
 function conjugate() {

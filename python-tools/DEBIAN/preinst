@@ -1,2 +1,0 @@
-#!/bin/sh
-ln -s /usr/share/python-tools/git-replace.py /usr/bin/git-replace
