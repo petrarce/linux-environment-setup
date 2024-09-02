@@ -7,9 +7,8 @@ from sh import realpath
 from git import Repo
 
 parser = argparse.ArgumentParser(
-    prog = "Replace git patterns using the git tool",
-    description="This prograp is used to find some epatterns and replace them with the"
-    "specified exact pattern")
+    prog = "git-replace",
+    description="Used to replace string patterns within the files in the git repository with the replacement string")
 
 parser.add_argument("-b", "--before-pattern", required=True)
 parser.add_argument("-a", "--after-pattern", required=True )
