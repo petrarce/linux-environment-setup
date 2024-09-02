@@ -3,7 +3,6 @@ export PATH=""\
 ":${HOME}/apps/bin"\
 ":${PATH}";
 
-export PYTHONPATH="${HOME}/apps/python-tools"\
 ":${PYTHONPATH}";
 
 # add timestamps to history
