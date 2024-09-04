@@ -137,7 +137,7 @@ function perf-to-svg {
 	set +x
 }
 
-print_progress() {
+function print_progress() {
 	local progress="$1"
 	local msg="${2}"
 	local bar_length=20
@@ -146,6 +146,7 @@ print_progress() {
 
 	 printf "\r[%-*s%*s] %d:$msg%%" "$fill_length" "" "$empty_length" "" "$progress"
 }
+
 function git-merge-for-commit(){
 	TARGET_COMMIT="${1}";
 	HEAD_COMMIT="${2}";
@@ -172,7 +173,7 @@ function git-merge-for-commit(){
 	echo "No merge commit found for the target commit: ${TARGET_COMMIT} starting from ${HEAD_COMMIT}"
 }
 
-git-cherry-pick-merge() {
+function git-cherry-pick-merge() {
 	for hash in "$@"; do
 		git cherry-pick -m1 "${hash}^".."${hash}";
 		git commit --allow-empty;

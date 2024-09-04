@@ -1,9 +1,8 @@
 export PATH=""\
 ":${HOME}/localstorage/software/Qt/Tools/QtCreator/bin"\
 ":${HOME}/apps/bin"\
+":${HOME}/apps/usr/bin"\
 ":${PATH}";
-
-":${PYTHONPATH}";
 
 # add timestamps to history
 export HISTTIMEFORMAT="%F %T "

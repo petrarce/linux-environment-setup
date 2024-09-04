@@ -30,7 +30,7 @@ repo = Repo(repoPath, search_parent_directories=True)
 
 if not renameFiles:
     try:
-        files = repo.git.grep("--name-only", beforePattern)
+        files = repo.git.grep("--name-only", beforePattern, "-- .")
         for file in files.split():
             filePath = repoPath + "/" + file
             sed(["-E", "s," + beforePattern + "," + afterPattern + ",g"], "-i", filePath)
@@ -40,7 +40,7 @@ if not renameFiles:
 
 else:
     try:
-        files = repo.git.ls_files()
+        files = repo.git.ls_files("-- .")
         for file in files.split():
             match = re.search(beforePattern, file, re.RegexFlag.DEBUG)
             if not match is None:

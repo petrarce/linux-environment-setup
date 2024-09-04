@@ -1,0 +1,77 @@
+#!/bin/python3
+import os
+import sys
+import argparse
+
+from docutils.io import InputError
+import sh
+from sh import dpkg
+import shutil
+
+def checkConflictsAndThrowIfAny(prefix_path, files):
+	has_conflicts = False
+	for file in files:
+		installed_file = os.path.realpath(prefix_path + "/" + file)
+		if os.path.exists(installed_file) and not os.path.isdir(installed_file):
+			has_conflicts = True
+			print("Conflicting with " + installed_file)
+	if has_conflicts:
+		raise RuntimeError("Please fix conflicts")
+
+def removeFiles(files):
+	for f in files:
+		ffull = os.path.realpath(f)
+		if os.path.isfile(ffull):
+			os.remove(ffull)
+
+def installPackage(prefix_path, pkg_path):
+	full_prefix_path = os.path.realpath(prefix_path)
+	full_pkg_path =  os.path.realpath(pkg_path)
+	if not os.path.isdir(full_prefix_path):
+		raise InputError(full_prefix_path + " doesn't exists")
+
+	if not os.path.isfile(full_pkg_path):
+		raise InputError(full_pkg_path + " doesn't exists")
+
+	pkg_cache_dir = full_prefix_path + "/cache"
+	full_pkg_cache_path = pkg_cache_dir + "/" + os.path.basename(full_pkg_path)
+	pkg_files = sh.bash(["-c", "dpkg -c " + full_pkg_path + " | awk \"{print \$NF}\""]).split()
+
+	if os.path.isfile(full_pkg_cache_path):
+		pkg_cache_files = sh.bash(["-c", "dpkg -c " + full_pkg_cache_path + " | awk \"{print \$NF}\""]).split()
+		files_not_in_cache = [item for item in pkg_files if item not in pkg_cache_files]
+		checkConflictsAndThrowIfAny(full_prefix_path, files_not_in_cache)
+		removeFiles(pkg_cache_files)
+	else:
+		checkConflictsAndThrowIfAny(full_prefix_path, pkg_files)
+	dpkg(["-x", full_pkg_path, full_prefix_path])
+	shutil.copyfile(full_pkg_path, full_pkg_cache_path)
+
+optGeneral = argparse.ArgumentParser(
+	prog="deb-local",
+	description="Lightwait script for handling deb packages installation on the local environment"
+)
+optGeneral.add_argument("command", help="Command that should be executed. Available commands: install, remove")
+
+optInstall = argparse.ArgumentParser(
+	prog=optGeneral.prog + " install",
+	description=optGeneral.description
+)
+optInstall.add_argument("-p", "--prefix-path", default= os.environ["HOME"] + "/apps", help="Folder, where debian package should be installed")
+optInstall.add_argument("debian_pkg_path", help="Path to the debian package to install")
+
+
+argsGeneral = optGeneral.parse_args(args=sys.argv[1:2])
+
+command = argsGeneral.command
+
+if command == "install":
+	argsInstall = optInstall.parse_args(args=sys.argv[2:])
+	installPackage(str(argsInstall.prefix_path), str(argsInstall.debian_pkg_path))
+	print("Install")
+elif command == "remove":
+	print("Remove")
+else:
+	optGeneral.print_help()
+	exit(1)
+
