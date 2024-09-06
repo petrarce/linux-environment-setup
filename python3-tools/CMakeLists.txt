@@ -2,19 +2,13 @@ project(PythonTools)
 cmake_minimum_required(VERSION 3.18)
 
 set( RES_DEB_FILE "${CMAKE_CURRENT_BINARY_DIR}/python3-tools.deb" )
+file(GLOB_RECURSE PKG_FILES LIST_DIRECTORIES false  "pkg/*")
 add_custom_command(OUTPUT "${RES_DEB_FILE}"
     COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_BINARY_DIR}/deb/"
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/DEBIAN" "${CMAKE_CURRENT_BINARY_DIR}/deb/DEBIAN"
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/usr/" "${CMAKE_CURRENT_BINARY_DIR}/deb/usr"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/pkg" "${CMAKE_CURRENT_BINARY_DIR}/deb/"
     COMMAND /usr/bin/dpkg -b "${CMAKE_CURRENT_BINARY_DIR}/deb" "${RES_DEB_FILE}"
 
-    DEPENDS
-        ./usr/shares/python3-tools/Finances/FinanceRoutines.py
-        ./usr/shares/python3-tools/Finances/__init__.py
-        ./usr/shares/python3-tools/PyPlotTools/Printers.py
-        ./usr/shares/python3-tools/git-replace.py
-        ./usr/shares/python3-tools/LinalgTools/Transforms.py
-        ./DEBIAN/control
+    DEPENDS ${PKG_FILES}
 )
 
 add_custom_target( python3-tools-deb ALL

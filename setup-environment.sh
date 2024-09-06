@@ -5,7 +5,7 @@
 # ecists it rewrites the link with force operation
 # otherwice backup of current file is created with 
 # timestamp
-
+set -e
 function updateFile() {
 	local source="${1}"
 	local destination="${2}"
@@ -59,3 +59,8 @@ while IFS= read -r -d '' file; do
 	updateFile $(realpath "${file}") $(echo "${file}" | sed -e "s,^.*environment,"${OUTPUT_DIR}",g");
 done <	<(find "${PWD}/environment/" -type f -print0)
 
+# build deb packages and install them on the local system
+cmake -B /tmp/build-pkgs . && cmake --build /tmp/build-pkgs && cmake --install /tmp/build-pkgs --prefix /tmp/build-pkgs/install
+for i in /tmp/build-pkgs/install/*.deb; do
+  deb-local install $i
+done
