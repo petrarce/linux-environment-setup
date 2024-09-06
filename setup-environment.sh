@@ -28,12 +28,13 @@ function updateFile() {
 function print_usage() {
   echo " -o, --output-dir    -    target directory wgere symlinks should be created"
   echo " -n, --no-backup     -    do not create the backup of previous version of the file, whic is going to be substituted"
+  echo " -i, --install       -    if set the deb packages constructed by the app will be installed systemwide."
   echo " -h, --help          -    print this message"
 
 }
 
 
-VAR_ARGS=$(getopt -o o:nh -l output-dir:no-backup,help -- "$@")
+VAR_ARGS=$(getopt -o "o:inh" -l "output-dir:install,no-backup,help" -- "$@")
 if [ "$?" != "0" ]; then
   print_usage
   exit 1
@@ -42,10 +43,12 @@ eval set -- "${VAR_ARGS}"
 
 OUTPUT_DIR=$(realpath "${HOME}")
 NO_BACKUP="1"
+INSTALL_SYSTEMWIDE="false"
 while true; do
 	case "$1" in
 		-o | --output-dir) OUTPUT_DIR=$(realpath "$2"); shift 2;;
 		-n | --no-baskup) NO_BACKUP="0"; shift 1;;
+    -i | --install) INSTALL_SYSTEMWIDE="true"; shift 1;;
     -h | --help) print_usage; exit 1;;
 		*) break;;
 	esac
@@ -61,6 +64,10 @@ done <	<(find "${PWD}/environment/" -type f -print0)
 
 # build deb packages and install them on the local system
 cmake -B /tmp/build-pkgs . && cmake --build /tmp/build-pkgs && cmake --install /tmp/build-pkgs --prefix /tmp/build-pkgs/install
+INSTALL_CMD="deb-local"
+if [ "${INSTALL_SYSTEMWIDE}" == "true" ]; then
+  INSTALL_CMD="sudo apt-get"
+fi
 for i in /tmp/build-pkgs/install/*.deb; do
-  deb-local install $i
+  ${INSTALL_CMD} install $i
 done
