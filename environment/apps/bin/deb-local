@@ -35,6 +35,11 @@ def installPackage(prefix_path, pkg_path):
 
 	pkg_cache_dir = full_prefix_path + "/cache"
 	full_pkg_cache_path = pkg_cache_dir + "/" + os.path.basename(full_pkg_path)
+	if not os.path.exists(pkg_cache_dir):
+		os.mkdir(pkg_cache_dir)
+	elif os.path.isfile(pkg_cache_dir):
+		raise RuntimeError("Cannot proceed since " + full_pkg_cache_path + "is file but not a directory")
+
 	pkg_files = sh.bash(["-c", "dpkg -c " + full_pkg_path + " | awk \"{print \$NF}\""]).split()
 
 	if os.path.isfile(full_pkg_cache_path):
