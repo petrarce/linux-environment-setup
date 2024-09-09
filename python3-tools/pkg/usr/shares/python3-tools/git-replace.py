@@ -19,18 +19,18 @@ args = parser.parse_args()
 
 beforePattern = args.before_pattern
 afterPattern = args.after_pattern
-repoPath = re.sub(r'\s+', '', str(realpath([args.repo_path])))
+targetPath = re.sub(r'\s+', '', str(realpath([args.repo_path])))
 renameFiles = args.files
 
-if not os.path.isdir(repoPath):
-    raise ValueError("path is not a directory", repoPath)
+if not os.path.isdir(targetPath):
+    raise ValueError("path is not a directory", targetPath)
 
-repo = Repo(repoPath, search_parent_directories=True)
-
+repo = Repo(targetPath, search_parent_directories=True)
+repoPath = os.path.realpath(repo.git.rev_parse("--show-toplevel"))
 
 if not renameFiles:
     try:
-        files = repo.git.grep("--name-only", beforePattern, "-- .")
+        files = repo.git.grep("--name-only", beforePattern, "--", targetPath)
         for file in files.split():
             filePath = repoPath + "/" + file
             sed(["-E", "s," + beforePattern + "," + afterPattern + ",g"], "-i", filePath)
@@ -40,7 +40,7 @@ if not renameFiles:
 
 else:
     try:
-        files = repo.git.ls_files("-- .")
+        files = repo.git.ls_files(targetPath)
         for file in files.split():
             match = re.search(beforePattern, file, re.RegexFlag.DEBUG)
             if not match is None:
