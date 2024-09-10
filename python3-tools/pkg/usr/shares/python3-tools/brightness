@@ -60,7 +60,12 @@ if absValue != None:
 
 elif relValue:
     value = float(relValue)
-    result = subprocess.run("xrandr --verbose | grep -i  Brightness | awk '{print $NF}'", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    result = subprocess.run(
+        f"xrandr  --verbose | pcregrep -M \"^{targetDisplay}(.*\n)*?\S\" | grep -vE \"^\S\" | grep -E Brightness | awk" + " '{print $NF}'",
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True)
     currentBrightness = float(result.stdout)
     newBrightness = min([max([currentBrightness + value, 0.1]), 1])
     subprocess.run(f"xrandr --output {targetDisplay} --brightness {newBrightness}", shell=True)
