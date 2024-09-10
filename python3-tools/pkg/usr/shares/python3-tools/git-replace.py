@@ -31,7 +31,7 @@ repoPath = os.path.realpath(repo.git.rev_parse("--show-toplevel"))
 
 if not renameFiles:
     try:
-        files = repo.git.grep("--name-only", beforePattern, "--", targetPath)
+        files = repo.git.grep("--name-only", "-E", beforePattern, "--", targetPath)
         for file in files.split():
             filePath = repoPath + "/" + file
             sed(
