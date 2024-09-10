@@ -76,5 +76,10 @@ else:
         if os.path.isdir(env):
             print(f"[WARNING] omitting {env} since it is a directory")
             continue
-        os.remove(env)
+        if os.path.exists(env):
+            os.remove(env)
+        
+        if not os.path.exists(os.path.dirname(env)):
+            os.makedirs(os.path.dirname(env))
+
         shutil.copy(repo, env)
