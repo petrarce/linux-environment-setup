@@ -7,11 +7,12 @@ from sh import realpath
 from git import Repo
 
 parser = argparse.ArgumentParser(
-    prog = "git-replace",
-    description="Used to replace string patterns within the files in the git repository with the replacement string")
+    prog="git-replace",
+    description="Used to replace string patterns within the files in the git repository with the replacement string",
+)
 
 parser.add_argument("-b", "--before-pattern", required=True)
-parser.add_argument("-a", "--after-pattern", required=True )
+parser.add_argument("-a", "--after-pattern", required=True)
 parser.add_argument("-p", "--repo-path", required=False, default=os.getcwd())
 parser.add_argument("-f", "--files", action="store_true")
 
@@ -19,7 +20,7 @@ args = parser.parse_args()
 
 beforePattern = args.before_pattern
 afterPattern = args.after_pattern
-targetPath = re.sub(r'\s+', '', str(realpath([args.repo_path])))
+targetPath = re.sub(r"\s+", "", str(realpath([args.repo_path])))
 renameFiles = args.files
 
 if not os.path.isdir(targetPath):
@@ -33,7 +34,9 @@ if not renameFiles:
         files = repo.git.grep("--name-only", beforePattern, "--", targetPath)
         for file in files.split():
             filePath = repoPath + "/" + file
-            sed(["-E", "s," + beforePattern + "," + afterPattern + ",g"], "-i", filePath)
+            sed(
+                ["-E", "s," + beforePattern + "," + afterPattern + ",g"], "-i", filePath
+            )
     except Exception as err:
         print("Cannot substitute pattern:", beforePattern, err)
 
