@@ -115,10 +115,10 @@ function perf-record-script() {
 	set +x
 }
 
-function perf-to-svg {
+function perf2svg {
 	set -x
 	if [ "${1}" == "--help" ]; then
-		echo  "usage: perf-to-svg <text-name> <PID> [<SecondsToProfile=30>]"
+		echo  "usage: perf2svg <text-name> <PID> [<SecondsToProfile=30>]"
 		return;
 	fi
 	local TEST_NAME="${1}"
@@ -133,7 +133,7 @@ function perf-to-svg {
 
 	perf-record-script "${PROCES_PID}" "${TEST_NAME}" dwarf "${secToProfile}"
 	perf-flamegraph-from-script-file "${TEST_NAME}.script" "${TEST_NAME}.svg"
-	ns "FINISH perf-to-svg ${TEST_NAME}"
+	ns "FINISH perf2svg ${TEST_NAME}"
 	set +x
 }
 
