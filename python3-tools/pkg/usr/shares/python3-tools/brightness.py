@@ -5,7 +5,7 @@ import argparse
 
 parser = argparse.ArgumentParser(
     prog="brightness",
-    description="The application for setting and updating the screen brightness",
+    description="The application for setting and updating the screen brightness"
 )
 
 parser.add_argument(
@@ -16,21 +16,21 @@ parser.add_argument(
     "--target-display",
     default=None,
     required=False,
-    help="Set the display name. Use --list-displays for overview",
+    help="Set the display name. Use --list-displays for overview"
 )
 parser.add_argument(
     "-s",
     "--set",
     default=None,
     type=float,
-    help="Set the brightness value. Should be between [0, 1]",
+    help="Set the brightness value. Should be between [0, 1]"
 )
 parser.add_argument(
     "-a",
     "--add",
     default=None,
     type=float,
-    help="Increase/decrease current value of the brightness to the specified value.",
+    help="Increase/decrease current value of the brightness to the specified value."
 )
 
 args = parser.parse_args()
@@ -45,14 +45,14 @@ if args.list_displays:
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         shell=True,
-        text=True,
+        text=True
     )
     if result.returncode != 0:
         raise subprocess.CalledProcessError(
             result.returncode,
             listDisplaysCommand,
             output=result.stdout,
-            stderr=result.stderr,
+            stderr=result.stderr
         )
     print(result.stdout, result.stderr)
     exit(0)
@@ -78,7 +78,7 @@ if targetDisplay == None:
             result.returncode,
             listDisplaysCommand,
             output=result.stdout,
-            stderr=result.stderr,
+            stderr=result.stderr
         )
     displays = result.stdout.split()
     if len(displays) == 0:
@@ -92,15 +92,12 @@ if absValue != None:
 elif relValue:
     value = float(relValue)
     result = subprocess.run(
-        f'xrandr  --verbose | pcregrep -M "^{targetDisplay}(.*\n)*?\S" | grep -vE "^\S" | grep -E Brightness | awk'
-        + " '{print $NF}'",
+        f"xrandr  --verbose | pcregrep -M \"^{targetDisplay}(.*\n)*?\S\" | grep -vE \"^\S\" | grep -E Brightness | awk" + " '{print $NF}'",
         shell=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        text=True,
+        text=True
     )
     currentBrightness = float(result.stdout)
     newBrightness = min([max([currentBrightness + value, 0.1]), 1])
-    subprocess.run(
-        f"xrandr --output {targetDisplay} --brightness {newBrightness}", shell=True
-    )
+    subprocess.run(f"xrandr --output {targetDisplay} --brightness {newBrightness}", shell=True)
