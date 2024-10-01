@@ -1,5 +1,6 @@
 python
-import sys, os.path
+import sys, os
+from os import path
 #sys.path.insert(0, '/usr/share/gcc/python')
 #sys.path.insert(0, os.path.expanduser('~/.gdb'))
 
@@ -10,3 +11,5 @@ import sys, os.path
 #qt5printers.register_printers(gdb.current_objfile())
 
 end
+
+set auto-load safe-path ~/apps/gdb-scripts
