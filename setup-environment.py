@@ -4,7 +4,7 @@ import argparse
 import re
 import shutil
 
-from future.backports.datetime import datetime
+import datetime
 from sh import tar
 
 
@@ -68,8 +68,8 @@ if load:
 else:
     if not no_backup:
         filesUser = [ m["env"] for m in filesMap]
-        formatted_date = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-        tar("cf", f"{homePath}/backup_{formatted_date}.tar", filesUser)
+        formatted_date = datetime.datetime(1, 1, 1).today().strftime("%Y-%m-%d-%H-%M-%S")
+        tar("--ignore-failed-read", "-cf", f"{homePath}/backup_{formatted_date}.tar",  filesUser)
     for m in filesMap:
         repo = m["repo"]
         env = m["env"]

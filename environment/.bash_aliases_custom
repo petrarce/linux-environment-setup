@@ -1,8 +1,13 @@
-export PATH=""\
+for i in \
 ":${HOME}/localstorage/software/Qt/Tools/QtCreator/bin"\
 ":${HOME}/apps/bin"\
 ":${HOME}/apps/usr/bin"\
-":${PATH}";
+""; do
+	if [[ "${PATH}" == *"${i}"* ]]; then
+		continue
+	fi
+	PATH="$i:${PATH}"
+done
 
 # add timestamps to history
 export HISTTIMEFORMAT="%F %T "
