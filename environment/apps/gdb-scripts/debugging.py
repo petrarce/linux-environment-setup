@@ -42,9 +42,6 @@ def print_bt_if_has_file(filename):
 
 	traverse_frames(bt_if_file, filename)
 
-
-
-
 def create_gdb_command(name, function, description=""):
 	"""
 	Creates a GDB command with less boilerplate.
@@ -68,7 +65,5 @@ def create_gdb_command(name, function, description=""):
 	CustomGDBCommand()  # Register the command
 
 
-create_gdb_command(name="atrue", function=always_true)
-create_gdb_command(name="afalse", function=always_false)
 create_gdb_command(name="print_bt_if_has_parent", function=print_bt_if_has_parent)
 create_gdb_command(name="print_bt_if_has_file", function=print_bt_if_has_file)
