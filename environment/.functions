@@ -234,3 +234,23 @@ function conjugate() {
 
 	firefox "https://conjugator.reverso.net/conjugation-english-verb-${1}.html"
 }
+function prepend-path() {
+	VAR=${1}
+	VAL=${2}
+	if [ "_$(echo "${!VAR}" | grep -e "${VAL}")" == "_" ]; then
+		export ${VAR}="${VAL}:${!VAR}"
+	fi
+}
+
+function use-qt() {
+
+	export QT_HOME="$(realpath ${1})"
+	if [ ! -d "${QT_HOME}" ]; then
+		echo "Not a directory: ${QT_HOME}"
+		return
+	fi
+	prepend-path "PATH" "${QT_HOME}/bin"
+	prepend-path "LD_LIBRARY_PATH" "${QT_HOME}/lib"
+	prepend-path "PKG_CONFIG_PATH" "${QT_HOME}/lib/pkgconfig"
+	prepend-path "CMAKE_PREFIX_PATH" "${QT_HOME}"
+}
