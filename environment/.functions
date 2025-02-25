@@ -254,3 +254,8 @@ function use-qt() {
 	prepend-path "PKG_CONFIG_PATH" "${QT_HOME}/lib/pkgconfig"
 	prepend-path "CMAKE_PREFIX_PATH" "${QT_HOME}"
 }
+
+function ollama-unload() {
+	_model="${1}"
+	curl "localhost:11434/api/chat" -d "{\"keep_alive\": \"0\", \"model\": \"${_model}\"}"
+}

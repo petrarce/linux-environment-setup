@@ -1,10 +1,11 @@
+#!/bin/bash
 for i in \
-":${HOME}/localstorage/software/Qt/Tools/QtCreator/bin"\
-":${HOME}/apps/bin"\
-":${HOME}/apps/usr/bin"\
-":${HOME}/go/bin"\
+":${HOME}/localstorage/software/Qt/Tools/QtCreator/bin" \
+":${HOME}/apps/bin" \
+":${HOME}/apps/usr/bin" \
+":${HOME}/go/bin" \
 ""; do
-	if [[ "${PATH}" == *"${i}"* ]]; then
+	if echo "${PATH}" | grep -q "${i}"; then
 		continue
 	fi
 	PATH="$i:${PATH}"

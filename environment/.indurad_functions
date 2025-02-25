@@ -5,18 +5,19 @@ function updateSoftfs() {
     set -x
     host=$1
     imagePath=$2
-    imageName=`basename ${imagePath}`
-    rsync --progress ${imagePath} ${host}:/DATA &&
-        ssh ${host} ifus2shell.py -u admin -P update -d localhost /DATA/${imageName}
+    imageName="$(basename "${imagePath}")"
+    rsync --progress "${imagePath}" "${host}:/DATA" &&
+        ssh "${host}" ifus2shell.py -u admin -P update -d localhost "/DATA/${imageName}"
     set +x
 }
 
 function wake-on-lan()
 {
-	MAC=${1}
-	HOSTNAME=${2}
-	ssh idesktop11.bvd.indurad.x wakeonlan ${MAC}
-	ssh  -i $(echo rsa-crypt-unlock) root@"${HOSTNAME}"
+	MAC="${1}"
+	HOSTNAME="${2}"
+    IDENTITY_FILE="$(rsa-crypt-unlock)"
+	ssh idesktop11.bvd.indurad.x wakeonlan "${MAC}"
+	ssh  -i "${IDENTITY_FILE}" root@"${HOSTNAME}"
 }
 
 #=== ALIASES ===
