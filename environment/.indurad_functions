@@ -13,9 +13,9 @@ function updateSoftfs() {
 
 function wake-on-lan()
 {
-	MAC=${1}
-	HOSTNAME=${2}
-	ssh idesktop11.bvd.indurad.x wakeonlan ${MAC}
+	MAC="${1}"
+	HOSTNAME="${2}"
+	ssh idesktop11.bvd.indurad.x wakeonlan "${MAC}"
 	ssh  -i $(echo rsa-crypt-unlock) root@"${HOSTNAME}"
 }
 
