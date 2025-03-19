@@ -64,7 +64,8 @@ filesMap = [
 
 if load:
     for repoVsEnv in filesMap:
-        shutil.copy(repoVsEnv["env"], repoVsEnv["repo"])
+        if os.path.exists(repoVsEnv["env"]):
+            shutil.copy(repoVsEnv["env"], repoVsEnv["repo"])
 else:
     if not no_backup:
         filesUser = [ m["env"] for m in filesMap]

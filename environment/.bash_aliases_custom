@@ -3,6 +3,7 @@ for i in \
 ":${HOME}/localstorage/software/Qt/Tools/QtCreator/bin" \
 ":${HOME}/apps/bin" \
 ":${HOME}/apps/usr/bin" \
+":${HOME}/.local/bin" \
 ":${HOME}/go/bin" \
 ""; do
 	if echo "${PATH}" | grep -q "${i}"; then
@@ -30,6 +31,7 @@ alias ns='notify-send '
 alias cmake-ninja='cmake -GNinja '
 alias cmake-RelWithDebInfo='cmake-ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo '
 alias cmake-Profiling='cmake-ninja -DCMAKE_BUILD_TYPE=Profiling '
+alias cmake-Tsan='CC=/usr/bin/clang-19 CXX=/usr/bin/clang++-19 cmake -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_FLAGS="-fsanitize=thread,undefined" -DCMAKE_C_FLAGS="-fsanitize=thread,undefined" -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=thread,undefined" -DCMAKE_SHARED_LINKER_FLAGS="-fsanitize=thread,undefined"'
 alias env-clang15-compiler='CC="$(which clang-15)" CXX="$(which clang++-15)" '
 alias cmake-clang-RelWithDebInfo='env-clang15-compiler cmake-RelWithDebInfo -DCMAKE_CXX_STANDARD=20 -DBUILD_DISABLE_DEBUG_INFO=ON -DBUILD_TESTING=ON -DCMAKE_CXX_FLAGS=-Werror '
 alias rsync='rsync -Plrz'
