@@ -1,0 +1,73 @@
+{
+  "models": [
+    {
+      "title": "DeepSeek coder v2 (latest)",
+      "provider": "ollama",
+      "model": "deepseek-coder-v2:latest"
+    },
+    {
+      "title": "DeepSeek R1 14B",
+      "provider": "ollama",
+      "model": "deepseek-r1:14b"
+    },
+    {
+      "title": "Llama 3.1 8B",
+      "provider": "ollama",
+      "model": "llama3.1:8b"
+    }
+  ],
+  "contextProviders": [
+    {
+      "name": "code",
+      "params": {}
+    },
+    {
+      "name": "docs",
+      "params": {}
+    },
+    {
+      "name": "diff",
+      "params": {}
+    },
+    {
+      "name": "terminal",
+      "params": {}
+    },
+    {
+      "name": "problems",
+      "params": {}
+    },
+    {
+      "name": "folder",
+      "params": {}
+    },
+    {
+      "name": "codebase",
+      "params": {}
+    }
+  ],
+  "slashCommands": [
+    {
+      "name": "share",
+      "description": "Export the current chat session to markdown"
+    },
+    {
+      "name": "cmd",
+      "description": "Generate a shell command"
+    },
+    {
+      "name": "commit",
+      "description": "Generate a git commit message"
+    }
+  ],
+  "data": [],
+  "tabAutocompleteModel": {
+    "title": "Qwen2.5-Coder 1.5B",
+    "provider": "ollama",
+    "model": "qwen2.5-coder:1.5b-base"
+  },
+  "embeddingsProvider": {
+    "provider": "ollama",
+    "model": "nomic-embed-text:latest"
+  }
+}
