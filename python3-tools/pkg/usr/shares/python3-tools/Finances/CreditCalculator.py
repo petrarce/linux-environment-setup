@@ -1,7 +1,7 @@
+
 #!/usr/bin/env python3
 import sys
 import argparse
-import math
 
 def calculate_credit(interest_rate, total_loan, loan_period, partial_repayments):
     """
