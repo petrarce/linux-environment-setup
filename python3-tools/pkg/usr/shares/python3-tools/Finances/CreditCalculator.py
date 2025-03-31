@@ -121,12 +121,11 @@ def _main():
     Prints the result or error messages if inputs are invalid.
     """
     parser = argparse.ArgumentParser(description="Calculate the monthly rate for each year of a loan.")
-    parser.add_argument("--interest-rate", type=float, help="Interest rate as float")
-    parser.add_argument("--total-loan", type=float, help="Total loan amount as float")
-    parser.add_argument("--loan-period", type=int, help="Loan period in years")
-    parser.add_argument("--partial-repayments", type=float, help="Partial repayments as float")
-    parser.add_argument("--partial-repayments-period", type=int, default=1,
-                      help="Years between partial repayments (default: 1)")
+    parser.add_argument("--interest-rate", type=float, required=True, help="Interest rate as float (0-1)")
+    parser.add_argument("--total-loan", type=float, required=True, help="Total loan amount as float (>0)")
+    parser.add_argument("--loan-period", type=int, required=True, help="Loan period in years (>0)")
+    parser.add_argument("--repayment-map", type=str, default="{}",
+                      help='JSON string of repayment schedule (e.g. \'{"2": 20000, "5": 10000}\')')
     parser.add_argument("--config", type=str, 
                       help="Path to JSON config file for multiple credits")
 
@@ -143,17 +142,23 @@ def _main():
             sys.exit(1)
     else:
         try:
-            yearly_rates, total_paid = calculate_credit(
-                args.interest_rate,
-                args.total_loan,
-                args.loan_period,
-                args.partial_repayments,
-                args.partial_repayments_period
+            # Parse repayment map from JSON string
+            repayment_map = json.loads(args.repayment_map.replace("'", "\""))
+            repayment_map = {int(k): v for k, v in repayment_map.items()}
+            
+            yearly_rates, total_paid, unused = calculate_credit(
+                interest_rate=args.interest_rate,
+                total_loan=args.total_loan,
+                loan_period=args.loan_period,
+                repayment_map=repayment_map
             )
+            
             for year, rate_data in yearly_rates.items():
                 print(f"Year {year}: Monthly Rate = {rate_data[0]:.2f}, Remaining Loan = {rate_data[1]:.2f}")
             print(f"Total Paid Over Loan Period: {total_paid:.2f}")
-        except ValueError as e:
+            print(f"Unused Repayment Capacity: {unused:.2f}")
+            
+        except (ValueError, json.JSONDecodeError) as e:
             print(f"Error: {e}", file=sys.stderr)
             sys.exit(1)
 
