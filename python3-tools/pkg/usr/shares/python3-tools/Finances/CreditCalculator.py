@@ -51,7 +51,7 @@ def calculate_credit(interest_rate, total_loan, loan_period, partial_repayments,
 
         total_paid += annual_payment + partial_payment
         remaining_loan -= partial_payment
-        yearly_rates[year] = monthly_payment
+        yearly_rates[year] = (monthly_payment, remaining_loan)
         if remaining_loan == 0:
             break
 
@@ -89,9 +89,9 @@ def calculate_multiple_credits(config_file):
 
         # Offset payments by start year
         start_year = credit['start_year']
-        for credit_year, monthly_rate in yearly_rates.items():
+        for credit_year, monthly_data in yearly_rates.items():
             calendar_year = start_year + credit_year - 1
-            aggregated_payments[calendar_year] += monthly_rate
+            aggregated_payments[calendar_year] += monthly_data[0]  # Access first element
 
         # Handle redirected credits by subtracting their loan amount
         if credit.get('redirected', False):
@@ -139,8 +139,8 @@ def _main():
                 args.partial_repayments,
                 args.partial_repayments_period
             )
-            for year, rate in yearly_rates.items():
-                print(f"Year {year}: Monthly Rate = {rate:.2f}")
+            for year, rate_data in yearly_rates.items():
+                print(f"Year {year}: Monthly Rate = {rate_data[0]:.2f}, Remaining Loan = {rate_data[1]:.2f}")
             print(f"Total Paid Over Loan Period: {total_paid:.2f}")
         except ValueError as e:
             print(f"Error: {e}", file=sys.stderr)

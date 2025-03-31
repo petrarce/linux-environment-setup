@@ -9,23 +9,25 @@ class TestCreditCalculator(unittest.TestCase):
         """Test normal case with valid inputs"""
         yearly_rates, total_paid = calculate_credit(0.05, 100000, 10, 0.1)
         self.assertEqual(len(yearly_rates), 5)
-        self.assertAlmostEqual(yearly_rates[1], 1250.0, places=2)
-        self.assertAlmostEqual(yearly_rates[5], 916.67, places=2)
+        self.assertAlmostEqual(yearly_rates[1][0], 1250.0, places=2)
+        self.assertAlmostEqual(yearly_rates[5][0], 916.67, places=2)
+        self.assertAlmostEqual(yearly_rates[1][1], 80000.00, places=2)
+        self.assertAlmostEqual(yearly_rates[5][1], 0.00, places=2)
         self.assertAlmostEqual(total_paid, 115000.00, places=2)
 
     def test_zero_interest(self):
         """Test with zero interest rate"""
         yearly_rates, total_paid = calculate_credit(0.0, 100000, 5, 0.0)
         self.assertEqual(len(yearly_rates), 5)
-        self.assertAlmostEqual(yearly_rates[1], 1666.67, places=2)
-        self.assertAlmostEqual(yearly_rates[5], 1666.67, places=2)
+        self.assertAlmostEqual(yearly_rates[1][0], 1666.67, places=2)
+        self.assertAlmostEqual(yearly_rates[5][0], 1666.67, places=2)
         self.assertAlmostEqual(total_paid, 100000.00, places=2)
 
     def test_full_early_repayment(self):
         """Test when partial repayments pay off loan early"""
         yearly_rates, total_paid = calculate_credit(0.1, 100000, 10, 1.0)
         self.assertEqual(len(yearly_rates), 1)
-        self.assertAlmostEqual(yearly_rates[1], 1666.67, places=2)
+        self.assertAlmostEqual(yearly_rates[1][0], 1666.67, places=2)
         self.assertAlmostEqual(total_paid, 110000.00, places=2)
 
     def test_invalid_interest_rate(self):
@@ -69,8 +71,10 @@ class TestCreditCalculator(unittest.TestCase):
         )
         
         self.assertEqual(len(yearly_rates), 7)  # Should finish in 7 years
-        self.assertAlmostEqual(yearly_rates[1], 1250.00, places=2)
-        self.assertAlmostEqual(yearly_rates[3], 1125.00, places=2)  # Year 3 payment
+        self.assertAlmostEqual(yearly_rates[1][0], 1250.00, places=2)
+        self.assertAlmostEqual(yearly_rates[3][0], 1125.00, places=2)  # Year 3 payment
+        self.assertAlmostEqual(yearly_rates[3][1], 60000.00, places=2)
+        self.assertAlmostEqual(yearly_rates[7][1], 0.00, places=2)
         self.assertAlmostEqual(total_paid, 120000, places=2)
 
     def test_multiple_credits(self):
