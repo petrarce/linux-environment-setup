@@ -83,7 +83,8 @@ def calculate_multiple_credits(config_file):
             interest_rate=credit['interest_rate'],
             total_loan=loan_amount,
             loan_period=credit['period'],
-            partial_repayments=credit['partial_repayments']
+            partial_repayments=credit['partial_repayments'],
+            partial_repayments_period=credit.get('partial_repayments_period', 1)
         )
 
         # Offset payments by start year
