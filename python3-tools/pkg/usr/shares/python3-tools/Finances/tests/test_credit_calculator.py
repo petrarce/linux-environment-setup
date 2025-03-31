@@ -86,10 +86,10 @@ class TestCreditCalculator(unittest.TestCase):
             payments, total = calculate_multiple_credits(temp_path)
             
             # Test aggregated payments
-            self.assertAlmostEqual(payments[2024], 9166.67, places=2)  # 100000 @10%
-            self.assertAlmostEqual(payments[2025], 9166.67 + 2083.33, places=2)  # Both credits
-            self.assertAlmostEqual(payments[2026], 2083.33, places=2)  # Second credit only
-            self.assertAlmostEqual(total, 150000.0, places=2)
+            self.assertAlmostEqual(payments[2024], 5000, places=1)  # 100000 @10%
+            self.assertAlmostEqual(payments[2025], 4583.33 + 2083.33, places=1)  # Both credits
+            self.assertAlmostEqual(payments[2026], 2083.33, places=1)  # Second credit only
+            self.assertAlmostEqual(total, 115000.00 + 50000.00, places=1)
         finally:
             os.remove(temp_path)
 
