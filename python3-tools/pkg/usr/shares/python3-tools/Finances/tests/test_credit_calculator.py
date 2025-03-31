@@ -93,5 +93,40 @@ class TestCreditCalculator(unittest.TestCase):
         finally:
             os.remove(temp_path)
 
+    def test_redirected_credit(self):
+        """Test that redirected credits subtract their loan amount from total"""
+        config = [
+            {
+                "loan_amount": 100000,
+                "period": 2,
+                "partial_repayments": 0.0,
+                "interest_rate": 0.1,
+                "start_year": 2024
+            },
+            {
+                "loan_amount": 50000,
+                "period": 2,
+                "partial_repayments": 0.0,
+                "interest_rate": 0.0,
+                "start_year": 2025,
+                "redirected": True
+            }
+        ]
+        
+        with tempfile.NamedTemporaryFile(mode='w', delete=False) as f:
+            json.dump(config, f)
+            temp_path = f.name
+        
+        try:
+            payments, total = calculate_multiple_credits(temp_path)
+            
+            # First credit: 100000 @10% over 2 years with partial repayments of 0% (total paid = 115000)
+            # Second credit: 50000 redirected (subtracted from total)
+            # Second credit payments: 50000 @0% over 2 years (total paid = 50000)
+            # Final total should be 115000 - 50000 + 50000 = 120000
+            self.assertAlmostEqual(total, 115000.00, places=2)
+        finally:
+            os.remove(temp_path)
+
 if __name__ == '__main__':
     unittest.main()

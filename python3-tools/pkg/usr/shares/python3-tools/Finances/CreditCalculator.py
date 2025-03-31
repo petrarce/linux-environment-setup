@@ -70,9 +70,10 @@ def calculate_multiple_credits(config_file):
 
     for credit in credits:
         # Calculate individual credit
+        loan_amount = credit['loan_amount']
         yearly_rates, total_paid = calculate_credit(
             interest_rate=credit['interest_rate'],
-            total_loan=credit['loan_amount'],
+            total_loan=loan_amount,
             loan_period=credit['period'],
             partial_repayments=credit['partial_repayments']
         )
@@ -83,6 +84,9 @@ def calculate_multiple_credits(config_file):
             calendar_year = start_year + credit_year - 1
             aggregated_payments[calendar_year] += monthly_rate
 
+        # Handle redirected credits by subtracting their loan amount
+        if credit.get('redirected', False):
+            total_paid_all -= loan_amount
         total_paid_all += total_paid
 
     # Convert defaultdict to regular dict and sort
