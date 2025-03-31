@@ -1,0 +1,50 @@
+[
+    {
+        "loan_amount": 200000,
+        "period": 30,
+        "repayment_map": {
+            "2": 15000, 
+            "4": 15000, 
+            "6": 15000, 
+            "8": 15000, 
+            "10": 40000
+        },
+        "interest_rate": 0.0403,
+        "start_year": 2026
+    },
+    {
+        "loan_amount": 7500,
+        "period": 13,
+        "redirected": true,
+        "interest_rate": 0.02,
+        "start_year": 2028
+    },
+    {
+        "loan_amount": 7500,
+        "period": 11,
+        "redirected": true,
+        "interest_rate": 0.02,
+        "start_year": 2030
+    },
+    {
+        "loan_amount": 7500,
+        "period": 9,
+        "redirected": true,
+        "interest_rate": 0.02,
+        "start_year": 2032
+    },
+    {
+        "loan_amount": 7500,
+        "period": 7,
+        "redirected": true,
+        "interest_rate": 0.02,
+        "start_year": 2034
+    },
+    {
+        "loan_amount": 20000,
+        "period": 5,
+        "redirected": true,
+        "interest_rate": 0.02,
+        "start_year": 2036
+    }
+]

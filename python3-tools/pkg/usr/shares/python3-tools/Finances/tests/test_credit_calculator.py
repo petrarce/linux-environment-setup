@@ -108,7 +108,7 @@ class TestCreditCalculator(unittest.TestCase):
             temp_path = f.name
         
         try:
-            payments, total = calculate_multiple_credits(temp_path)
+            payments, _, total = calculate_multiple_credits(temp_path)
             
             # Test aggregated payments
             self.assertAlmostEqual(payments[2024], 5000, places=1)  # 100000 @10%
@@ -142,7 +142,7 @@ class TestCreditCalculator(unittest.TestCase):
             temp_path = f.name
         
         try:
-            payments, total = calculate_multiple_credits(temp_path)
+            payments, _, total = calculate_multiple_credits(temp_path)
             
             # First credit: 100000 @10% over first year with partial repayments after 1-st year: { 1: 50000 }.
             # Second credit: 50000 redirected (subtracted from total)

@@ -87,6 +87,7 @@ def calculate_multiple_credits(config_file):
         credits = json.load(f)
 
     aggregated_payments = defaultdict(float)
+    aggregated_left = defaultdict(float)
     total_paid_all = 0.0
 
     for credit in credits:
@@ -104,6 +105,7 @@ def calculate_multiple_credits(config_file):
         for credit_year, monthly_data in yearly_rates.items():
             calendar_year = start_year + credit_year - 1
             aggregated_payments[calendar_year] += monthly_data[0]  # Access first element
+            aggregated_left[calendar_year] += monthly_data[1]
 
         # Handle redirected credits by subtracting their loan amount
         if credit.get('redirected', False):
@@ -112,7 +114,8 @@ def calculate_multiple_credits(config_file):
 
     # Convert defaultdict to regular dict and sort
     ordered_payments = dict(sorted(aggregated_payments.items()))
-    return ordered_payments, round(total_paid_all, 2)
+    ordered_left_total = dict(sorted(aggregated_left.items()))
+    return ordered_payments, ordered_left_total, round(total_paid_all, 2)
 
 def _main():
     """
@@ -143,9 +146,9 @@ def _main():
 
     if hasattr(args, "config"):
         try:
-            yearly_payments, total = calculate_multiple_credits(args.config)
+            yearly_payments, left_total, total = calculate_multiple_credits(args.config)
             for year, rate in yearly_payments.items():
-                print(f"Year {year}: Combined Monthly Rate = {rate:.2f}")
+                print(f"Year {year}: Combined Monthly Rate = {rate:.2f}. Left to pay: {left_total[year]}")
             print(f"Total Paid Across All Credits: {total:.2f}")
         except Exception as e:
             print(f"Config error: {e}", file=sys.stderr)
