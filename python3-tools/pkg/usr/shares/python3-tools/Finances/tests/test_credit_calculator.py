@@ -1,5 +1,8 @@
 import unittest
-from ..CreditCalculator import calculate_credit
+import tempfile
+import os
+import json
+from ..CreditCalculator import calculate_credit, calculate_multiple_credits
 
 class TestCreditCalculator(unittest.TestCase):
     def test_normal_case(self):
@@ -54,6 +57,41 @@ class TestCreditCalculator(unittest.TestCase):
         """Test invalid partial repayment (>1)"""
         with self.assertRaises(ValueError):
             calculate_credit(0.05, 100000, 10, 1.1)
+
+    def test_multiple_credits(self):
+        """Test aggregation of multiple credits"""
+        config = [
+            {
+                "loan_amount": 100000,
+                "period": 2,
+                "partial_repayments": 0.0,
+                "interest_rate": 0.1,
+                "start_year": 2024
+            },
+            {
+                "loan_amount": 50000,
+                "period": 2,
+                "partial_repayments": 0.0,
+                "interest_rate": 0.0,
+                "start_year": 2025
+            }
+        ]
+        
+        # Save temp config
+        with tempfile.NamedTemporaryFile(mode='w', delete=False) as f:
+            json.dump(config, f)
+            temp_path = f.name
+        
+        try:
+            payments, total = calculate_multiple_credits(temp_path)
+            
+            # Test aggregated payments
+            self.assertAlmostEqual(payments[2024], 9166.67, places=2)  # 100000 @10%
+            self.assertAlmostEqual(payments[2025], 9166.67 + 2083.33, places=2)  # Both credits
+            self.assertAlmostEqual(payments[2026], 2083.33, places=2)  # Second credit only
+            self.assertAlmostEqual(total, 150000.0, places=2)
+        finally:
+            os.remove(temp_path)
 
 if __name__ == '__main__':
     unittest.main()

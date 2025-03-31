@@ -2,6 +2,8 @@
 #!/usr/bin/env python3
 import sys
 import argparse
+import json
+from collections import defaultdict
 
 def calculate_credit(interest_rate, total_loan, loan_period, partial_repayments):
     """
@@ -47,6 +49,46 @@ def calculate_credit(interest_rate, total_loan, loan_period, partial_repayments)
 
     return yearly_rates, round(total_paid, 2)
 
+def calculate_multiple_credits(config_file):
+    """
+    Calculate combined monthly payments across multiple credits from a JSON config.
+    
+    Args:
+        config_file (str): Path to JSON file containing credit configurations
+        
+    Returns:
+        tuple: (
+            dict: Aggregated monthly payments by calendar year,
+            float: Total paid across all credits
+        )
+    """
+    with open(config_file) as f:
+        credits = json.load(f)
+
+    aggregated_payments = defaultdict(float)
+    total_paid_all = 0.0
+
+    for credit in credits:
+        # Calculate individual credit
+        yearly_rates, total_paid = calculate_credit(
+            interest_rate=credit['interest_rate'],
+            total_loan=credit['loan_amount'],
+            loan_period=credit['period'],
+            partial_repayments=credit['partial_repayments']
+        )
+
+        # Offset payments by start year
+        start_year = credit['start_year']
+        for credit_year, monthly_rate in yearly_rates.items():
+            calendar_year = start_year + credit_year - 1
+            aggregated_payments[calendar_year] += monthly_rate
+
+        total_paid_all += total_paid
+
+    # Convert defaultdict to regular dict and sort
+    ordered_payments = dict(sorted(aggregated_payments.items()))
+    return ordered_payments, round(total_paid_all, 2)
+
 def _main():
     """
     Command-line interface to calculate the monthly rate for each year of a loan.
@@ -59,17 +101,29 @@ def _main():
     parser.add_argument("--total-loan", type=float, help="Total loan amount as float")
     parser.add_argument("--loan-period", type=int, help="Loan period in years")
     parser.add_argument("--partial-repayments", type=float, help="Partial repayments as float")
+    parser.add_argument("--config", type=str, 
+                      help="Path to JSON config file for multiple credits")
 
     args = parser.parse_args()
 
-    try:
-        yearly_rates, total_paid = calculate_credit(args.interest_rate, args.total_loan, args.loan_period, args.partial_repayments)
-        for year, rate in yearly_rates.items():
-            print(f"Year {year}: Monthly Rate = {rate:.2f}")
-        print(f"Total Paid Over Loan Period: {total_paid:.2f}")
-    except ValueError as e:
-        print(f"Error: {e}", file=sys.stderr)
-        sys.exit(1)
+    if args.config:
+        try:
+            yearly_payments, total = calculate_multiple_credits(args.config)
+            for year, rate in yearly_payments.items():
+                print(f"Year {year}: Combined Monthly Rate = {rate:.2f}")
+            print(f"Total Paid Across All Credits: {total:.2f}")
+        except Exception as e:
+            print(f"Config error: {e}", file=sys.stderr)
+            sys.exit(1)
+    else:
+        try:
+            yearly_rates, total_paid = calculate_credit(args.interest_rate, args.total_loan, args.loan_period, args.partial_repayments)
+            for year, rate in yearly_rates.items():
+                print(f"Year {year}: Monthly Rate = {rate:.2f}")
+            print(f"Total Paid Over Loan Period: {total_paid:.2f}")
+        except ValueError as e:
+            print(f"Error: {e}", file=sys.stderr)
+            sys.exit(1)
 
 if __name__ == "__main__":
     _main()
