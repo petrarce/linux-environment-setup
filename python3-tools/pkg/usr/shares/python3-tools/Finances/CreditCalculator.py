@@ -31,16 +31,21 @@ def calculate_credit(interest_rate, total_loan, loan_period, partial_repayments)
     yearly_repaiment_amount = total_loan / loan_period
     remaining_loan = total_loan
     yearly_rates = {}
+    total_paid = 0.0
 
     for year in range(1, loan_period + 1):
         monthly_payment = (remaining_loan * interest_rate + yearly_repaiment_amount) / 12
-        remaining_loan = max(0, remaining_loan - (yearly_repaiment_amount + (total_loan * partial_repayments)))
-
         yearly_rates[year] = monthly_payment
+        
+        annual_payment = monthly_payment * 12
+        partial_payment = total_loan * partial_repayments
+        total_paid += annual_payment + partial_payment
+
+        remaining_loan = max(0, remaining_loan - (yearly_repaiment_amount + partial_payment))
         if remaining_loan == 0:
             break
 
-    return yearly_rates
+    return yearly_rates, round(total_paid, 2)
 
 def _main():
     """
@@ -58,9 +63,10 @@ def _main():
     args = parser.parse_args()
 
     try:
-        result = calculate_credit(args.interest_rate, args.total_loan, args.loan_period, args.partial_repayments)
-        for year, rate in result.items():
+        yearly_rates, total_paid = calculate_credit(args.interest_rate, args.total_loan, args.loan_period, args.partial_repayments)
+        for year, rate in yearly_rates.items():
             print(f"Year {year}: Monthly Rate = {rate:.2f}")
+        print(f"Total Paid Over Loan Period: {total_paid:.2f}")
     except ValueError as e:
         print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)

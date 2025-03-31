@@ -4,23 +4,26 @@ from ..CreditCalculator import calculate_credit
 class TestCreditCalculator(unittest.TestCase):
     def test_normal_case(self):
         """Test normal case with valid inputs"""
-        result = calculate_credit(0.05, 100000, 10, 0.1)
-        self.assertEqual(len(result), 5)
-        self.assertAlmostEqual(result[1], 1250.0, places=2)
-        self.assertAlmostEqual(result[5], 916.67, places=2)
+        yearly_rates, total_paid = calculate_credit(0.05, 100000, 10, 0.1)
+        self.assertEqual(len(yearly_rates), 5)
+        self.assertAlmostEqual(yearly_rates[1], 1250.0, places=2)
+        self.assertAlmostEqual(yearly_rates[5], 916.67, places=2)
+        self.assertAlmostEqual(total_paid, 115000.00, places=2)
 
     def test_zero_interest(self):
         """Test with zero interest rate"""
-        result = calculate_credit(0.0, 100000, 5, 0.0)
-        self.assertEqual(len(result), 5)
-        self.assertAlmostEqual(result[1], 1666.67, places=2)
-        self.assertAlmostEqual(result[5], 1666.67, places=2)
+        yearly_rates, total_paid = calculate_credit(0.0, 100000, 5, 0.0)
+        self.assertEqual(len(yearly_rates), 5)
+        self.assertAlmostEqual(yearly_rates[1], 1666.67, places=2)
+        self.assertAlmostEqual(yearly_rates[5], 1666.67, places=2)
+        self.assertAlmostEqual(total_paid, 100000.00, places=2)
 
     def test_full_early_repayment(self):
         """Test when partial repayments pay off loan early"""
-        result = calculate_credit(0.1, 100000, 10, 1.0)
-        self.assertEqual(len(result), 1)
-        self.assertAlmostEqual(result[1], 1666.66666, places=2)
+        yearly_rates, total_paid = calculate_credit(0.1, 100000, 10, 1.0)
+        self.assertEqual(len(yearly_rates), 1)
+        self.assertAlmostEqual(yearly_rates[1], 1666.67, places=2)
+        self.assertAlmostEqual(total_paid, 120000.00, places=2)
 
     def test_invalid_interest_rate(self):
         """Test invalid interest rate (negative)"""
