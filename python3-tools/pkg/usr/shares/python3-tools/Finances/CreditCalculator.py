@@ -5,7 +5,7 @@ import argparse
 import json
 from collections import defaultdict
 
-def calculate_credit(interest_rate, total_loan, loan_period, partial_repayments, partial_repayments_period=1):
+def calculate_credit(interest_rate, total_loan, loan_period, repayment_map={}):
     """
     Calculate the monthly rate for each year of a loan.
 
@@ -13,14 +13,14 @@ def calculate_credit(interest_rate, total_loan, loan_period, partial_repayments,
         interest_rate (float): Annual interest rate (0-1)
         total_loan (float): Total loan amount (>0)
         loan_period (int): Loan period in years (>0)
-        partial_repayments (float): Partial repayment percentage (0-1)
-        partial_repayments_period (int): Years between partial repayments (≥1)
+        repayment_map (dict): Optional year-to-repayment mapping {year: amount}
 
     Returns:
-        dict: A dictionary where keys are the years and values are the monthly rates for each year.
-
-    Raises:
-        ValueError: If any of the input parameters are invalid.
+        tuple: (
+            dict: {year: (monthly_rate, remaining_loan)},
+            float: Total paid,
+            float: Unused repayments
+        )
     """
     if not (0 <= interest_rate <= 1):
         raise ValueError("Interest rate must be between 0 and 1")
@@ -28,34 +28,46 @@ def calculate_credit(interest_rate, total_loan, loan_period, partial_repayments,
         raise ValueError("Total loan amount must be greater than 0")
     if loan_period <= 0:
         raise ValueError("Loan period must be greater than 0")
-    if not (0 <= partial_repayments <= 1):
-        raise ValueError("Partial repayments must be between 0 and 1")
-    if partial_repayments_period < 1:
-        raise ValueError("Partial repayment period must be ≥1")
+    if not isinstance(repayment_map, dict):
+        raise ValueError("repayment_map must be a dictionary")
+    for amount in repayment_map.values():
+        if amount < 0:
+            raise ValueError("Repayment amounts must be ≥0")
 
     yearly_repaiment_amount = total_loan / loan_period
     remaining_loan = total_loan
     yearly_rates = {}
     total_paid = 0.0
+    total_unused = 0.0
+    last_year = loan_period  # Default if full period completes
 
     for year in range(1, loan_period + 1):
-        # Calculate the payments and remaining loan not including the partial repayment
+        # Calculate base payments
         monthly_payment = (remaining_loan * interest_rate + min(remaining_loan, yearly_repaiment_amount)) / 12
         annual_payment = monthly_payment * 12
         remaining_loan = max(0, remaining_loan - yearly_repaiment_amount)
+        total_paid += annual_payment
 
-        # Calculate the remaining loan including the partial repayment
-        partial_payment = min(remaining_loan, total_loan * partial_repayments) \
-            if year % partial_repayments_period == 0 \
-            else 0.0
+        # Process scheduled repayment if exists
+        if year in repayment_map:
+            scheduled = repayment_map[year]
+            actual = min(scheduled, remaining_loan)
+            remaining_loan -= actual
+            total_paid += actual
+            total_unused += scheduled - actual
 
-        total_paid += annual_payment + partial_payment
-        remaining_loan -= partial_payment
         yearly_rates[year] = (monthly_payment, remaining_loan)
+        
         if remaining_loan == 0:
+            last_year = year
             break
 
-    return yearly_rates, round(total_paid, 2)
+    # Add unused repayments from future years
+    for y in repayment_map:
+        if y > last_year:
+            total_unused += repayment_map[y]
+
+    return yearly_rates, round(total_paid, 2), round(total_unused, 2)
 
 def calculate_multiple_credits(config_file):
     """
@@ -79,12 +91,11 @@ def calculate_multiple_credits(config_file):
     for credit in credits:
         # Calculate individual credit
         loan_amount = credit['loan_amount']
-        yearly_rates, total_paid = calculate_credit(
+        yearly_rates, total_paid, _ = calculate_credit(
             interest_rate=credit['interest_rate'],
             total_loan=loan_amount,
             loan_period=credit['period'],
-            partial_repayments=credit['partial_repayments'],
-            partial_repayments_period=credit.get('partial_repayments_period', 1)
+            repayment_map=credit.get('repayment_map', {})
         )
 
         # Offset payments by start year
