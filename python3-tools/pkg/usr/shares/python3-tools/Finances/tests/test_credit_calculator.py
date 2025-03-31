@@ -58,6 +58,21 @@ class TestCreditCalculator(unittest.TestCase):
         with self.assertRaises(ValueError):
             calculate_credit(0.05, 100000, 10, 1.1)
 
+    def test_partial_repayment_period(self):
+        """Test partial repayment every 2 years"""
+        yearly_rates, total_paid = calculate_credit(
+            interest_rate=0.05,
+            total_loan=100000,
+            loan_period=10,
+            partial_repayments=0.1,
+            partial_repayments_period=2
+        )
+        
+        self.assertEqual(len(yearly_rates), 7)  # Should finish in 7 years
+        self.assertAlmostEqual(yearly_rates[1], 1250.00, places=2)
+        self.assertAlmostEqual(yearly_rates[3], 1125.00, places=2)  # Year 3 payment
+        self.assertAlmostEqual(total_paid, 145500.00, places=2)
+
     def test_multiple_credits(self):
         """Test aggregation of multiple credits"""
         config = [

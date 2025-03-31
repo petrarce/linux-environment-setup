@@ -5,15 +5,16 @@ import argparse
 import json
 from collections import defaultdict
 
-def calculate_credit(interest_rate, total_loan, loan_period, partial_repayments):
+def calculate_credit(interest_rate, total_loan, loan_period, partial_repayments, partial_repayments_period=1):
     """
     Calculate the monthly rate for each year of a loan.
 
     Args:
-        interest_rate (float): The annual interest rate as a float between 0 and 1.
-        total_loan (float): The total amount of the loan as a float greater than 0.
-        loan_period (int): The period of the loan in years, must be an integer greater than 0.
-        partial_repayments (float): The partial repayments as a float between 0 and 1.
+        interest_rate (float): Annual interest rate (0-1)
+        total_loan (float): Total loan amount (>0)
+        loan_period (int): Loan period in years (>0)
+        partial_repayments (float): Partial repayment percentage (0-1)
+        partial_repayments_period (int): Years between partial repayments (≥1)
 
     Returns:
         dict: A dictionary where keys are the years and values are the monthly rates for each year.
@@ -29,6 +30,8 @@ def calculate_credit(interest_rate, total_loan, loan_period, partial_repayments)
         raise ValueError("Loan period must be greater than 0")
     if not (0 <= partial_repayments <= 1):
         raise ValueError("Partial repayments must be between 0 and 1")
+    if partial_repayments_period < 1:
+        raise ValueError("Partial repayment period must be ≥1")
 
     yearly_repaiment_amount = total_loan / loan_period
     remaining_loan = total_loan
@@ -40,9 +43,12 @@ def calculate_credit(interest_rate, total_loan, loan_period, partial_repayments)
         yearly_rates[year] = monthly_payment
         
         annual_payment = monthly_payment * 12
-        partial_payment = total_loan * partial_repayments
-        total_paid += annual_payment + partial_payment
+        partial_payment = 0.0
 
+        if partial_repayments > 0 and (year - 1) % partial_repayments_period == 0:
+            partial_payment = total_loan * partial_repayments
+
+        total_paid += annual_payment + partial_payment
         remaining_loan = max(0, remaining_loan - (yearly_repaiment_amount + partial_payment))
         if remaining_loan == 0:
             break
@@ -105,6 +111,8 @@ def _main():
     parser.add_argument("--total-loan", type=float, help="Total loan amount as float")
     parser.add_argument("--loan-period", type=int, help="Loan period in years")
     parser.add_argument("--partial-repayments", type=float, help="Partial repayments as float")
+    parser.add_argument("--partial-repayments-period", type=int, default=1,
+                      help="Years between partial repayments (default: 1)")
     parser.add_argument("--config", type=str, 
                       help="Path to JSON config file for multiple credits")
 
@@ -121,7 +129,13 @@ def _main():
             sys.exit(1)
     else:
         try:
-            yearly_rates, total_paid = calculate_credit(args.interest_rate, args.total_loan, args.loan_period, args.partial_repayments)
+            yearly_rates, total_paid = calculate_credit(
+                args.interest_rate,
+                args.total_loan,
+                args.loan_period,
+                args.partial_repayments,
+                args.partial_repayments_period
+            )
             for year, rate in yearly_rates.items():
                 print(f"Year {year}: Monthly Rate = {rate:.2f}")
             print(f"Total Paid Over Loan Period: {total_paid:.2f}")
