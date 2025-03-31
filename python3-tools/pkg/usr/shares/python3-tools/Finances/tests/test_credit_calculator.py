@@ -26,7 +26,7 @@ class TestCreditCalculator(unittest.TestCase):
         yearly_rates, total_paid = calculate_credit(0.1, 100000, 10, 1.0)
         self.assertEqual(len(yearly_rates), 1)
         self.assertAlmostEqual(yearly_rates[1], 1666.67, places=2)
-        self.assertAlmostEqual(total_paid, 120000.00, places=2)
+        self.assertAlmostEqual(total_paid, 110000.00, places=2)
 
     def test_invalid_interest_rate(self):
         """Test invalid interest rate (negative)"""
@@ -71,7 +71,7 @@ class TestCreditCalculator(unittest.TestCase):
         self.assertEqual(len(yearly_rates), 7)  # Should finish in 7 years
         self.assertAlmostEqual(yearly_rates[1], 1250.00, places=2)
         self.assertAlmostEqual(yearly_rates[3], 1125.00, places=2)  # Year 3 payment
-        self.assertAlmostEqual(total_paid, 145500.00, places=2)
+        self.assertAlmostEqual(total_paid, 120000, places=2)
 
     def test_multiple_credits(self):
         """Test aggregation of multiple credits"""

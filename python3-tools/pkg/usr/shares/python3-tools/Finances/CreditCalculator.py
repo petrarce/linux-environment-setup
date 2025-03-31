@@ -39,17 +39,19 @@ def calculate_credit(interest_rate, total_loan, loan_period, partial_repayments,
     total_paid = 0.0
 
     for year in range(1, loan_period + 1):
-        monthly_payment = (remaining_loan * interest_rate + yearly_repaiment_amount) / 12
-        yearly_rates[year] = monthly_payment
-        
+        # Calculate the payments and remaining loan not including the partial repayment
+        monthly_payment = (remaining_loan * interest_rate + min(remaining_loan, yearly_repaiment_amount)) / 12
         annual_payment = monthly_payment * 12
-        partial_payment = 0.0
+        remaining_loan = max(0, remaining_loan - yearly_repaiment_amount)
 
-        if partial_repayments > 0 and (year - 1) % partial_repayments_period == 0:
-            partial_payment = total_loan * partial_repayments
+        # Calculate the remaining loan including the partial repayment
+        partial_payment = min(remaining_loan, total_loan * partial_repayments) \
+            if year % partial_repayments_period == 0 \
+            else 0.0
 
         total_paid += annual_payment + partial_payment
-        remaining_loan = max(0, remaining_loan - (yearly_repaiment_amount + partial_payment))
+        remaining_loan -= partial_payment
+        yearly_rates[year] = monthly_payment
         if remaining_loan == 0:
             break
 
