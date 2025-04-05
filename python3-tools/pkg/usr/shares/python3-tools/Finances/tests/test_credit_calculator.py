@@ -160,3 +160,34 @@ if __name__ == '__main__':
             calculate_credit(0.05, 100000, 10, repayment_map=["invalid"])
         with self.assertRaises(ValueError):
             calculate_credit(0.05, 100000, 10, repayment_map={1: -100})
+
+    def test_remaining_amount_multiple_credits(self):
+        """Test remaining amount calculation for multiple credits"""
+        config = [
+            {
+                "loan_amount": 100000,
+                "period": 2,
+                "interest_rate": 0.1,
+                "start_year": 2024
+            },
+            {
+                "loan_amount": 50000,
+                "period": 2,
+                "interest_rate": 0.05,
+                "start_year": 2025
+            }
+        ]
+        
+        with tempfile.NamedTemporaryFile(mode='w', delete=False) as f:
+            json.dump(config, f)
+            temp_path = f.name
+        
+        try:
+            payments, remaining, total = calculate_multiple_credits(temp_path)
+            
+            # Verify remaining amounts
+            self.assertAlmostEqual(remaining[2024], 100000, places=2)  # First year, only first credit
+            self.assertAlmostEqual(remaining[2025], 50000 + 50000, places=2)  # Both credits active
+            self.assertAlmostEqual(remaining[2026], 25000, places=2)  # All credits paid off
+        finally:
+            os.remove(temp_path)
