@@ -81,8 +81,8 @@ class TestCreditCalculator(unittest.TestCase):
         self.assertEqual(len(yearly_rates), 7)  # Should finish in 7 years
         self.assertAlmostEqual(yearly_rates[1][0], 1250.00, places=2)
         self.assertAlmostEqual(yearly_rates[3][0], 1125.00, places=2)  # Year 3 payment
-        self.assertAlmostEqual(yearly_rates[3][1], 60000.00, places=2)
-        self.assertAlmostEqual(yearly_rates[7][1], 0.00, places=2)
+        self.assertAlmostEqual(yearly_rates[3][1], 70000.00, places=2)
+        self.assertAlmostEqual(yearly_rates[7][1], 10000.00, places=2)
         self.assertAlmostEqual(total_paid, 120000, places=2)
 
     def test_multiple_credits(self):
@@ -152,8 +152,6 @@ class TestCreditCalculator(unittest.TestCase):
         finally:
             os.remove(temp_path)
 
-if __name__ == '__main__':
-    unittest.main()
     def test_invalid_repayment_map(self):
         """Test invalid repayment map types"""
         with self.assertRaises(ValueError):
@@ -177,17 +175,59 @@ if __name__ == '__main__':
                 "start_year": 2025
             }
         ]
-        
+
         with tempfile.NamedTemporaryFile(mode='w', delete=False) as f:
             json.dump(config, f)
             temp_path = f.name
-        
+
         try:
             payments, remaining, total = calculate_multiple_credits(temp_path)
-            
+
             # Verify remaining amounts
             self.assertAlmostEqual(remaining[2024], 100000, places=2)  # First year, only first credit
             self.assertAlmostEqual(remaining[2025], 50000 + 50000, places=2)  # Both credits active
             self.assertAlmostEqual(remaining[2026], 25000, places=2)  # All credits paid off
         finally:
             os.remove(temp_path)
+
+    def test_cumulative_payments_multiple_credits(self):
+        """Test cumulative payments calculation for multiple credits"""
+        config = [
+            {
+                "loan_amount": 100000,
+                "period": 2,
+                "interest_rate": 0.1,
+                "start_year": 2024,
+                "repayment_map": {1: 25000}
+            },
+            {
+                "loan_amount": 25000,
+                "period": 2,
+                "interest_rate": 0.05,
+                "start_year": 2025,
+                "redirected": True
+            }
+        ]
+
+        with tempfile.NamedTemporaryFile(mode='w', delete=False) as f:
+            json.dump(config, f)
+            temp_path = f.name
+
+        try:
+            payments, remaining, total = calculate_multiple_credits(temp_path)
+
+            # Verify cumulative payments
+            # Main credit
+            self.assertAlmostEqual(remaining[2024], 100000, places=2)
+            # Main Body - yearly payment - repayment for year 1 + 2nd credit
+            self.assertAlmostEqual(remaining[2025], 100000 - 50000 - 25000 + 25000 +00, places=2)
+            # Body2 for 2-nd year
+            self.assertAlmostEqual(remaining[2026], 12500, places=2)
+            # Credit1 + InterestRate1_2024 + InterestRate1_2025 + InterestRate2_2025 + InterestRate2_2026
+            self.assertAlmostEqual(total, 100000 + 10000 + 2500 + 1250 + 625, places=2)
+        finally:
+            os.remove(temp_path)
+
+if __name__ == '__main__':
+    unittest.main()
+

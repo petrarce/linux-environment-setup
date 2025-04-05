@@ -1,0 +1,18 @@
+[
+    {
+        "loan_amount": 200000,
+        "period": 30,
+        "repayment_map": {
+            "10": 120000
+        },
+        "interest_rate": 0.0403,
+        "start_year": 2026
+    },
+    {
+        "loan_amount": 50000,
+        "period": 7,
+        "redirected": true,
+        "interest_rate": 0.01,
+        "start_year": 2036
+    }
+]

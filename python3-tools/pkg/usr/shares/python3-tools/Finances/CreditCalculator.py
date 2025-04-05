@@ -46,6 +46,7 @@ def calculate_credit(interest_rate, total_loan, loan_period, repayment_map: Dict
         # Calculate base payments
         monthly_payment = (remaining_loan * interest_rate + min(remaining_loan, yearly_repaiment_amount)) / 12
         annual_payment = monthly_payment * 12
+        remaining_at_start = remaining_loan
         remaining_loan = max(0, remaining_loan - yearly_repaiment_amount)
         total_paid += annual_payment
 
@@ -57,7 +58,7 @@ def calculate_credit(interest_rate, total_loan, loan_period, repayment_map: Dict
             total_paid += actual
             total_unused += scheduled - actual
 
-        yearly_rates[year] = (monthly_payment, remaining_loan)
+        yearly_rates[year] = (monthly_payment, remaining_at_start)
         
         if remaining_loan == 0:
             last_year = year
@@ -80,6 +81,7 @@ def calculate_multiple_credits(config_file):
     Returns:
         tuple: (
             dict: Aggregated monthly payments by calendar year,
+            dict: Aggregated remaining to pay by calendar year
             float: Total paid across all credits
         )
     """
@@ -87,7 +89,7 @@ def calculate_multiple_credits(config_file):
         credits = json.load(f)
 
     aggregated_payments = defaultdict(float)
-    aggregated_left = defaultdict(float)
+    aggregated_remaining = defaultdict(float)
     total_paid_all = 0.0
 
     for credit in credits:
@@ -105,7 +107,7 @@ def calculate_multiple_credits(config_file):
         for credit_year, monthly_data in yearly_rates.items():
             calendar_year = start_year + credit_year - 1
             aggregated_payments[calendar_year] += monthly_data[0]  # Access first element
-            aggregated_left[calendar_year] += monthly_data[1]
+            aggregated_remaining[calendar_year] += monthly_data[1]
 
         # Handle redirected credits by subtracting their loan amount
         if credit.get('redirected', False):
@@ -114,7 +116,7 @@ def calculate_multiple_credits(config_file):
 
     # Convert defaultdict to regular dict and sort
     ordered_payments = dict(sorted(aggregated_payments.items()))
-    ordered_left_total = dict(sorted(aggregated_left.items()))
+    ordered_left_total = dict(sorted(aggregated_remaining.items()))
     return ordered_payments, ordered_left_total, round(total_paid_all, 2)
 
 def _main():
@@ -148,7 +150,7 @@ def _main():
         try:
             yearly_payments, left_total, total = calculate_multiple_credits(args.config)
             for year, rate in yearly_payments.items():
-                print(f"Year {year}: Combined Monthly Rate = {rate:.2f}. Left to pay: {left_total[year]}")
+                print(f"Year {year}: Remaining Loan: {left_total[year]}, Combined Monthly Rate = {rate:.2f}")
             print(f"Total Paid Across All Credits: {total:.2f}")
         except Exception as e:
             print(f"Config error: {e}", file=sys.stderr)
@@ -167,7 +169,7 @@ def _main():
             )
 
             for year, rate_data in yearly_rates.items():
-                print(f"Year {year}: Monthly Rate = {rate_data[0]:.2f}, Remaining Loan = {rate_data[1]:.2f}")
+                print(f"Year {year}: Remaining Loan = {rate_data[1]:.2f}, Monthly Rate = {rate_data[0]:.2f}")
             print(f"Total Paid Over Loan Period: {total_paid:.2f}")
             print(f"Unused Repayment Capacity: {unused:.2f}")
 
