@@ -18,7 +18,23 @@ def calculate_investment(
     total_topped = 0.0
     total_interest = 0.0
 
-    # add all possible checks for the input, ai!
+    # Validate input parameters
+    if initial_capital < 0:
+        raise ValueError("Initial capital cannot be negative")
+    if interest_rate < 0:
+        raise ValueError("Interest rate less then 0")
+    if yearly_tax < 0 or yearly_tax > 1:
+        raise ValueError("Yearly tax rate must be between 0 and 1")
+    if period < 1:
+        raise ValueError("Investment period must be at least 1 year")
+    
+    # Validate top-up map contents
+    for year, amount in top_up_map.items():
+        if year < 1 or year > period:
+            raise ValueError(f"Top-up year {year} must be within investment period (1-{period})")
+        if amount < 0:
+            raise ValueError(f"Top-up amount for year {year} cannot be negative")
+
     for year in range(1, period + 1):
         # Apply top-up at start of year
         if year in top_up_map:
