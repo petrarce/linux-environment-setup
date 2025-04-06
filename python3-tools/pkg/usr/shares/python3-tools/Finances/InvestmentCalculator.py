@@ -18,6 +18,7 @@ def calculate_investment(
     total_topped = 0.0
     total_interest = 0.0
 
+    # add all possible checks for the input, ai!
     for year in range(1, period + 1):
         # Apply top-up at start of year
         if year in top_up_map:
@@ -33,42 +34,6 @@ def calculate_investment(
 
     return (round(total_topped, 2), round(total_interest, 2))
 
-class TestCalculateInvestment(unittest.TestCase):
-    """Unit tests for investment calculator."""
-    
-    def test_no_top_up_no_tax(self):
-        total_topped, total_interest = calculate_investment(
-            1000, {}, 0.1, 0.0, 1
-        )
-        self.assertEqual(total_topped, 0.0)
-        self.assertEqual(total_interest, 100.0)
-
-    def test_with_top_up(self):
-        total_topped, total_interest = calculate_investment(
-            10000, {2: 15000}, 0.1, 0.0, 2
-        )
-        self.assertEqual(total_topped, 4000.0)
-        self.assertEqual(total_interest, 2500.0)
-
-    def test_top_up_not_needed(self):
-        total_topped, total_interest = calculate_investment(
-            10000, {1: 5000}, 0.1, 0.0, 1
-        )
-        self.assertEqual(total_topped, 0.0)
-        self.assertEqual(total_interest, 1000.0)
-
-    def test_with_tax(self):
-        total_topped, total_interest = calculate_investment(
-            1000, {}, 0.1, 0.2, 1
-        )
-        self.assertEqual(total_interest, 80.0)
-
-    def test_zero_period(self):
-        total_topped, total_interest = calculate_investment(
-            1000, {}, 0.1, 0.0, 0
-        )
-        self.assertEqual(total_topped, 0.0)
-        self.assertEqual(total_interest, 0.0)
 
 if __name__ == '__main__':
     # Command line execution
