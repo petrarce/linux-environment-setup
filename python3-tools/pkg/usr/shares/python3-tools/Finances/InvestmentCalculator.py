@@ -30,15 +30,15 @@ def calculate_investment(
     
     # Validate top-up map contents
     for year, amount in top_up_map.items():
-        if year < 1 or year > period:
-            raise ValueError(f"Top-up year {year} must be within investment period (1-{period})")
+        if year < 0 or year >= period:
+            raise ValueError(f"Top-up year {year} must be within investment period (0 - {period}-1)")
         if amount < 0:
             raise ValueError(f"Top-up amount for year {year} cannot be negative")
 
-    for year in range(1, period + 1):
+    for year in range(0, period):
         # Apply top-up at start of year
         if year in top_up_map:
-            top_up = max(0.0, top_up_map[year] - current_balance)
+            top_up = top_up_map[year]
             total_topped += top_up
             current_balance += top_up
 
@@ -49,7 +49,6 @@ def calculate_investment(
         current_balance += net_interest
 
     return (round(total_topped, 2), round(total_interest, 2))
-
 
 if __name__ == '__main__':
     # Command line execution
