@@ -27,6 +27,15 @@ class TestCalculateInvestment(unittest.TestCase):
             3)
         self.assertEqual(total_interest, 1000 * 0.5 + 1500 * 0.5 + 2250 * 0.5)
 
+    def test_periodic_top_up(self):
+        total_topped, total_interest = calculate_investment(
+            10000,
+            {'repeat': (2, 1000), 0: 500},
+            0.1,
+            0,
+            10)
+        self.assertAlmostEqual(total_topped, 5500, places=2)
+
     def test_input_period(self):
         with self.assertRaises(ValueError):
             calculate_investment(1000, {}, 0.1, 0.0, 0)
