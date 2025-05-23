@@ -3,6 +3,17 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
+function source_if_exists() {
+	if [ -f "${1}" ]; then
+		source "${1}"
+	fi
+}
+
+function text-exec()
+{
+	find . -name "$1" -exec {} \&\;
+}
+
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
@@ -117,18 +128,10 @@ if ! shopt -oq posix; then
   fi
 fi
 export LANG=en_US.utf8
-function text-exec()
-{
-	find . -name "$1" -exec {} \&\;
-}
 
-if [ -f ~/.functions ]; then
-	. ~/.functions
-fi
-
-if [ -f ~/.indurad_functions ]; then
-	. ~/.indurad_functions
-fi
+source_if_exists "$HOME/.indurad_functions"
+source_if_exists "$HOME/.functions"
+source_if_exists "$HOME/.local/bin/env"
 
 #iRPU:UmFkYXI0TSFuIW5nCg==
 
