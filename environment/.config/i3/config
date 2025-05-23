@@ -185,5 +185,5 @@ bindsym $mod+plus exec "brightness --add 0.1"
 bindsym $mod+minus  exec "brightness --add -0.1"
 
 exec --no-startup-id feh --bg-fill "${HOME}/.config/BackgroundImage.png"
-exec_always --no-startup-id "setxkbmap -option grp:alt_shift_toggle -layout us,de,ru,ua"
+exec_always --no-startup-id "setxkbmap -option grp:win_space_toggle -layout us,de,ru,ua"
 
