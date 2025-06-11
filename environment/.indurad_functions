@@ -21,19 +21,24 @@ function wake-on-lan()
 
 #=== ALIASES ===
 # calvin build aliases
-alias calvin-b='calvin -Q -n -D'
-alias calvin-b-RelWithDebInfo='calvin-b --cmake-build-type RelWithDebInfo'
-alias calvin-b-Profiling='calvin-b --cmake-build-type Profiling'
-alias calvin-b-Release='calvin-b --cmake-build-type Release'
+# build-local directory
+alias bl='build-local-$(git branch --show-current)'
+# builld-target directory
+alias bt='build-target-$(git branch --show-current)'
+
+alias calvin-b='calvin -Q -n -D '
+alias calvin-b-RelWithDebInfo='calvin-b --cmake-build-type RelWithDebInfo '
+alias calvin-b-Profiling='calvin-b --cmake-build-type Profiling '
+alias calvin-b-Release='calvin-b --cmake-build-type Release '
 alias calvin-bl='calvin-b -p local -a none'
 alias calvin-blo='calvin-bl -O'
-alias calvin-bl-RelWithDebInfo='calvin-bl --cmake-build-type RelWithDebInfo'
-alias calvin-bl-Profiling='calvin-bl --cmake-build-type Profiling'
-alias calvin-bl-Release='calvin-bl --cmake-build-type Release'
-alias calvin-bl-Debug='calvin-bl --cmake-build-type Debug'
-alias calvin-bl-RelWithDebInfo-localdev='calvin-bl-RelWithDebInfo -T localdev'
-alias calvin-bl-Profiling-localdev='calvin-bl-Profiling -T localdev'
-alias calvin-bl-Release-localdev='calvin-bl-Release -T localdev'
+alias calvin-bl-RelWithDebInfo='calvin-bl --cmake-build-type RelWithDebInfo '
+alias calvin-bl-Profiling='calvin-bl --cmake-build-type Profiling '
+alias calvin-bl-Release='calvin-bl --cmake-build-type Release '
+alias calvin-bl-Debug='calvin-bl --cmake-build-type Debug '
+alias calvin-bl-RelWithDebInfo-localdev='calvin-bl-RelWithDebInfo -T localdev '
+alias calvin-bl-Profiling-localdev='calvin-bl-Profiling -T localdev '
+alias calvin-bl-Release-localdev='calvin-bl-Release -T localdev '
 
 # android builds
 alias calvin-b-RelWithDebInfo-android-dev='calvin-b-RelWithDebInfo -p androidarm64v8a --file calvin-android.conf build-android '
