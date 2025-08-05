@@ -53,4 +53,6 @@ if __name__ == '__main__':
     from gi.repository import Gst
     Gst.init(None)
     
+    print(f"MJPG stream available at: http://{host}:{httpPort}/stream.mjpg")
+    print("Press Ctrl+C to stop the server")
     app.run(host=host, port=httpPort)
