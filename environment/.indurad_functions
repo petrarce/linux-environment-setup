@@ -41,8 +41,8 @@ alias calvin-bl-Profiling-localdev='calvin-bl-Profiling -T localdev '
 alias calvin-bl-Release-localdev='calvin-bl-Release -T localdev '
 
 # android builds
-alias calvin-b-RelWithDebInfo-android-dev='calvin-b-RelWithDebInfo -p androidarm64v8a --file calvin-android.conf build-android '
-alias calvin-b-RelWithDebInfo-android-emu='calvin-b-RelWithDebInfo -p androidx64 --file calvin-android.conf build-android '
+alias calvin-b-RelWithDebInfo-android-dev='calvin-b-RelWithDebInfo -p androidarm64v8a --file calvin-android.conf "$(echo bt)_android" '
+alias calvin-b-RelWithDebInfo-android-emu='calvin-b-RelWithDebInfo -p androidx64 --file calvin-android.conf "$(echo bt)_android" '
 
 #ifus2shell scripts
 alias ifus2shell-update='ifus2shell -P update -u admin -r'
