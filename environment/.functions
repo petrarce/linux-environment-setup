@@ -1,4 +1,22 @@
 #!/bin/bash
+function stream-rtp-video() {
+	port="$1"
+	codec="$2"
+	gst-launch-1.0 -v  udpsrc port="${port}" \
+			caps="application/x-rtp, media=video, clock-rate=90000, encoding-name=$(echo $codec | tr a-z A-Z), payload=96" \
+		! rtp${codec}depay \
+		! decodebin \
+		! videoconvert \
+		! autovideosink
+}
+
+function stream-rtp-video-jpeg() {
+	stream-rtp-video $1 jpeg
+}
+function stream-rtp-video-h264() {
+	stream-rtp-video $1 h264
+}
+
 function runRemoteScript() {
     set -x
     

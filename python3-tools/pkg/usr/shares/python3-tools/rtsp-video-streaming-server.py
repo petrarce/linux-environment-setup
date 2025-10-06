@@ -1,4 +1,4 @@
-#!/usr/bin/env pythoon3
+#!/usr/bin/env python3
 import argparse
 import gi
 import sys
@@ -19,7 +19,7 @@ class VideoStreamServer:
             if not os.path.isfile(self.args.file):
                 sys.exit(f"Error: File {self.args.file} not found")
                 
-            return f'( filesrc location={self.args.file} ! parsebin ! rtph264pay name=pay0 pt=96 )'
+            return f'( filesrc location={self.args.file} ! clockoverlay time-format="%Y-%m-%d %H:%M:%S" shaded-background=true !  parsebin ! rtph264pay name=pay0 pt=96 )'
             
         elif self.args.command == 'dev':
             if not os.path.exists(self.args.device):
@@ -31,6 +31,7 @@ class VideoStreamServer:
                         f',framerate=30/1 '
                     f'! videoconvert '
                     f'! queue max-size-buffers=1 leaky=downstream '
+                    f'! clockoverlay time-format="%Y-%m-%d %H:%M:%S" shaded-background=true '
                     f'! x264enc '
                         f'speed-preset=ultrafast '
                         f'tune=zerolatency '
@@ -46,7 +47,7 @@ class VideoStreamServer:
             
         elif self.args.command == 'gen':
             return ('( videotestsrc is-live=true ! video/x-raw,format=I420,width=640,height=480,framerate=15/1 '
-                    '! timeoverlay ! x264enc tune=zerolatency ! rtph264pay name=pay0 pt=96 )')
+                    '! timeoverlay ! clockoverlay time-format="%Y-%m-%d %H:%M:%S" shaded-background=true ! x264enc tune=zerolatency ! rtph264pay name=pay0 pt=96 )')
 
     def run(self):
         Gst.init(None)
