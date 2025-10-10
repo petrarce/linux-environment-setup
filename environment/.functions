@@ -1,4 +1,47 @@
 #!/bin/bash
+
+function redirect-udp-to-server() {
+	server_ssh_connect="${1}"
+	local_udp_port="${2}"
+	remote_ip_udp_port=${3}
+	local_tcp_port=${4}
+	remote_tcp_port=${5}
+
+	#redirect local udp traffic to local tcp port
+	socat UDP-LISTEN:"${local_udp_port}",reuseaddr,fork TCP:localhost:"${local_tcp_port}" & 
+	client_socat_pid="$!"
+
+	# connect to server, port forward the local_tcp_port to remote_tcp_port 
+	# and forward tcp to udp
+	# start in the foreground
+	ssh -t -t "${server_ssh_connect}" \
+		-L "${local_tcp_port}":localhost:"${remote_tcp_port}" \
+		socat TCP-LISTEN:"${remote_tcp_port}",reuseaddr,fork UDP:"${remote_ip_udp_port}"
+
+	kill -9 "$client_socat_pid"
+}
+
+function redirect-udp-from-server() {
+	server_ssh_connect="${1}"
+	local_udp_ip_port="${2}"
+	remote_udp_port=${3}
+	local_tcp_port=${4}
+	remote_tcp_port=${5}
+
+	#redirect local udp traffic to local tcp port
+	socat TCP-LISTEN:"${local_tcp_port}",reuseaddr,fork UDP:"${local_udp_ip_port}" & 
+	client_socat_pid="$!"
+
+	# connect to server, port forward the local_tcp_port to remote_tcp_port 
+	# and forward tcp to udp
+	# start in the foreground
+	ssh -t -t "${server_ssh_connect}" \
+		-R "${remote_tcp_port}":localhost:"${local_tcp_port}" \
+		socat UDP-LISTEN:"${remote_udp_port}",reuseaddr,fork TCP:localhost:"${remote_tcp_port}"
+
+	kill -9 "$client_socat_pid"
+}
+
 function stream-rtp-video() {
 	port="$1"
 	codec="$2"
