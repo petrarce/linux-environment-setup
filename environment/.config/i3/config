@@ -40,7 +40,7 @@ bindsym $mod+d exec dmenu_run
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
-# bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
+bindsym $mod+Shift+d exec --no-startup-id i3-dmenu-desktop
 
 # change focus
 bindsym $mod+j focus left
@@ -187,3 +187,5 @@ bindsym $mod+minus  exec "brightness --add -0.1"
 exec --no-startup-id feh --bg-fill "${HOME}/.config/BackgroundImage.png"
 exec_always --no-startup-id "setxkbmap -option grp:win_space_toggle -layout us,de,ru,ua"
 
+# startup applications
+exec_always --no-startup-id bash -c "~/.startup.sh"

@@ -22,9 +22,9 @@ function wake-on-lan()
 #=== ALIASES ===
 # calvin build aliases
 # build-local directory
-alias bl='/builds/build-local-$(git branch --show-current)'
+alias bl='./build-local-$(git branch --show-current)'
 # builld-target directory
-alias bt='./builds/build-target-$(git branch --show-current)'
+alias bt='./build-target-$(git branch --show-current)'
 
 alias calvin-b='calvin -Q -n -D '
 alias calvin-b-RelWithDebInfo='calvin-b --cmake-build-type RelWithDebInfo '
