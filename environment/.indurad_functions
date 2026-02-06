@@ -15,16 +15,16 @@ function wake-on-lan()
 {
 	MAC="${1}"
 	HOSTNAME="${2}"
-	ssh idesktop11.bvd.indurad.x wakeonlan "${MAC}"
+	ssh idesktop12.bvd.indurad.x wakeonlan "${MAC}"
 	ssh  -i $(echo rsa-crypt-unlock) root@"${HOSTNAME}"
 }
 
 #=== ALIASES ===
 # calvin build aliases
 # build-local directory
-alias bl='./build-local-$(git branch --show-current)'
+alias bl='build-local-$(git branch --show-current)'
 # builld-target directory
-alias bt='./build-target-$(git branch --show-current)'
+alias bt='build-target-$(git branch --show-current)'
 
 alias calvin-b='calvin -Q -n -D '
 alias calvin-b-RelWithDebInfo='calvin-b --cmake-build-type RelWithDebInfo '
